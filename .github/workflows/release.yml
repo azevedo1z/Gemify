@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  FLUTTER_VERSION: 3.41.6
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check that the tag matches the version of pubspec.yaml
+        run: |
+          version="$(sed -nE 's/^version: *([^+]+).*/\1/p' pubspec.yaml)"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the version $version of pubspec.yaml."
+            exit 1
+          fi
+      - name: Build the release notes from the commits
+        run: tool/release_notes.sh "$GITHUB_REF_NAME" > "$RUNNER_TEMP/notes.md"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart run build_runner build
+      - run: flutter gen-l10n
+      - run: flutter analyze
+      - run: flutter test
+        env:
+          TZ: America/Sao_Paulo
+      - name: Restore the release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.GEMIFY_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.GEMIFY_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Set the GEMIFY_KEYSTORE_BASE64 and GEMIFY_KEYSTORE_PASSWORD secrets to sign the APK."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/gemify-release.jks"
+          {
+            echo "storeFile=$RUNNER_TEMP/gemify-release.jks"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=gemify"
+            echo "keyPassword=$KEYSTORE_PASSWORD"
+          } > android/key.properties
+      - run: flutter build apk --release
+      - run: flutter build appbundle --release
+      - name: Name the builds after the version and compute their checksums
+        run: |
+          name="gemify-$GITHUB_REF_NAME"
+          cp build/app/outputs/flutter-apk/app-release.apk "$RUNNER_TEMP/$name.apk"
+          cp build/app/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/$name.aab"
+          cd "$RUNNER_TEMP"
+          sha256sum "$name.apk" "$name.aab" > "$name.sha256"
+      - name: Create the GitHub Release
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "$RUNNER_TEMP/gemify-$GITHUB_REF_NAME.apk" \
+            "$RUNNER_TEMP/gemify-$GITHUB_REF_NAME.aab" \
+            "$RUNNER_TEMP/gemify-$GITHUB_REF_NAME.sha256" \
+            --title "Gemify $GITHUB_REF_NAME" \
+            --notes-file "$RUNNER_TEMP/notes.md" \
+            --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}

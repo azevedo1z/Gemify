@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gemify/application/rejections.dart';
+import 'package:gemify/domain/expense.dart';
+import 'package:gemify/domain/month.dart';
+import 'package:gemify/presentation/backup/backup_actions.dart';
+import 'package:gemify/presentation/close_month/close_month_screen.dart';
+import 'package:gemify/presentation/expense_form/expense_form_screen.dart';
+import 'package:gemify/presentation/history/history_screen.dart';
+import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:gemify/presentation/month/income_dialog.dart';
+import 'package:gemify/presentation/providers.dart';
+import 'package:gemify/presentation/shared/month_view.dart';
+import 'package:gemify/presentation/shared/reference_picker.dart';
+import 'package:gemify/presentation/shared/share_text.dart';
+import 'package:share_plus/share_plus.dart';
+
+class MonthScreen extends ConsumerWidget {
+  const MonthScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) =>
+      switch (ref.watch(openMonthProvider)) {
+        AsyncData(:final value) => _OpenMonthPage(month: value),
+        AsyncError() => Scaffold(
+          body: Center(child: Text(AppLocalizations.of(context).loadFailed)),
+        ),
+        _ => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      };
+}
+
+enum _MenuAction { exportBackup, importBackup }
+
+class _OpenMonthPage extends ConsumerWidget {
+  const _OpenMonthPage({required this.month});
+
+  final Month month;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            tooltip: l10n.history,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const HistoryScreen()),
+            ),
+            icon: const Icon(Icons.history_rounded),
+          ),
+          IconButton(
+            tooltip: l10n.share,
+            onPressed: () => SharePlus.instance.share(
+              ShareParams(text: shareText(month, l10n)),
+            ),
+            icon: const Icon(Icons.ios_share_rounded),
+          ),
+          PopupMenuButton<_MenuAction>(
+            icon: const Icon(Icons.more_horiz_rounded),
+            onSelected: (action) => switch (action) {
+              _MenuAction.exportBackup => exportBackup(context, ref),
+              _MenuAction.importBackup => importBackup(context, ref),
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _MenuAction.exportBackup,
+                child: Text(l10n.exportBackup),
+              ),
+              PopupMenuItem(
+                value: _MenuAction.importBackup,
+                child: Text(l10n.importBackup),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: MonthView(
+        month: month,
+        onEditReference: () => _editReference(context, ref),
+        onEditIncome: () => editIncome(context, current: month.income),
+        onAdd: (category) => openExpenseForm(context, category),
+        onEdit: (entry) =>
+            openExpenseForm(context, entry.expense.category, entry: entry),
+        onClose: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const CloseMonthScreen()),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: l10n.newVariable,
+        onPressed: () => openExpenseForm(context, ExpenseCategory.variable),
+        child: const Icon(Icons.add_rounded),
+      ),
+      bottomNavigationBar: AuditBar(summary: month.summary),
+    );
+  }
+
+  Future<void> _editReference(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final picked = await pickReference(context, initial: month.reference);
+    if (picked == null || picked == month.reference) return;
+    try {
+      await ref.read(changeOpenReferenceProvider).call(picked);
+    } on InvalidReferenceException {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.referenceMustBeAfterClosed)),
+      );
+    }
+  }
+}

@@ -1,0 +1,10 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - lib/presentation/l10n/generated/**
+
+linter:
+  rules:
+    public_member_api_docs: false

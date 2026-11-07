@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+env:
+  FLUTTER_VERSION: 3.41.6
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart run build_runner build
+      - run: flutter gen-l10n
+      - run: flutter analyze
+      - run: flutter test --coverage
+        env:
+          TZ: America/Sao_Paulo
+      - run: dart run tool/check_domain_coverage.dart

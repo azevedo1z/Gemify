@@ -1,0 +1,66 @@
+Map<String, Object?> validBackup() => {
+  'format': 'gemify-backup',
+  'version': 1,
+  'exportedAt': '2026-11-07T14:26:00.000Z',
+  'months': [
+    <String, Object?>{
+      'id': 1,
+      'reference': '2026-10',
+      'status': 'closed',
+      'incomeCents': 500000,
+      'openedAt': '2026-10-01T12:00:00.000Z',
+      'closedAt': '2026-11-01T12:00:00.000Z',
+      'expenses': [
+        <String, Object?>{
+          'id': 10,
+          'category': 'variable',
+          'name': 'Mercado sem data',
+          'amountCents': 30000,
+          'spentOn': null,
+          'createdAt': '2026-10-02T12:00:00.000Z',
+          'updatedAt': '2026-10-03T09:30:00.000Z',
+        },
+      ],
+    },
+    <String, Object?>{
+      'id': 2,
+      'reference': '2026-11',
+      'status': 'open',
+      'incomeCents': 480000,
+      'openedAt': '2026-11-01T12:00:00.000Z',
+      'closedAt': null,
+      'expenses': [
+        <String, Object?>{
+          'id': 11,
+          'category': 'installment',
+          'name': 'TV',
+          'amountCents': 12000,
+          'currentInstallment': 8,
+          'totalInstallments': 18,
+          'createdAt': '2026-11-01T12:00:00.000Z',
+          'updatedAt': '2026-11-01T12:00:00.000Z',
+        },
+        <String, Object?>{
+          'id': 12,
+          'category': 'variable',
+          'name': 'Pão',
+          'amountCents': 700,
+          'spentOn': '2026-11-07',
+          'createdAt': '2026-11-07T12:00:00.000Z',
+          'updatedAt': '2026-11-07T12:00:00.000Z',
+        },
+      ],
+    },
+  ],
+  'changeLog': [
+    <String, Object?>{
+      'id': 1,
+      'occurredAt': '2026-11-07T12:00:00.000Z',
+      'monthId': 2,
+      'action': 'expenseCreated',
+      'entityId': 12,
+      'before': null,
+      'after': '{"name":"Pão"}',
+    },
+  ],
+};
