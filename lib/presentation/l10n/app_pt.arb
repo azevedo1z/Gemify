@@ -32,6 +32,8 @@
   "share": "Compartilhar",
   "exportBackup": "Exportar backup",
   "importBackup": "Importar backup",
+  "about": "Sobre",
+  "aboutDisclaimer": "Ferramenta de controle pessoal. Não é consultoria financeira.",
   "addTo": "Adicionar em {section}",
   "@addTo": {"placeholders": {"section": {"type": "String"}}},
   "newVariable": "Novo gasto variável",

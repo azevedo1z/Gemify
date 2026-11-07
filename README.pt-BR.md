@@ -24,6 +24,9 @@
 
 ---
 
+> [!NOTE]
+> O Gemify é uma ferramenta de controle pessoal, não consultoria financeira. Confira seus valores e decisões; o software não tem garantia (veja a [licença](LICENSE)).
+
 ## Sumário
 
 - [Por que o Gemify](#por-que-o-gemify)

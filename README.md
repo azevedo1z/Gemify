@@ -24,6 +24,9 @@
 
 ---
 
+> [!NOTE]
+> Gemify is a personal tracking tool, not financial advice. Check your amounts and decisions yourself; the software comes with no warranty (see the [license](LICENSE)).
+
 ## Table of contents
 
 - [Why Gemify](#why-gemify)

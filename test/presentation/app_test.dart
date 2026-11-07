@@ -288,4 +288,24 @@ void main() {
       variable('Pão', '7,00', on: defaultToday),
     ),
   );
+
+  testApp('the about dialog shows the disclaimer and the licenses', (
+    app,
+  ) async {
+    await app.tap(find.byIcon(Icons.more_horiz_rounded));
+    await app.tap(find.text('Sobre'));
+    expect(
+      find.text(
+        'Ferramenta de controle pessoal. Não é consultoria financeira.',
+      ),
+      findsOneWidget,
+    );
+
+    final context = app.tester.element(find.byType(AboutDialog));
+    await app.tap(
+      find.text(MaterialLocalizations.of(context).viewLicensesButtonLabel),
+    );
+
+    expect(find.byType(LicensePage), findsOneWidget);
+  });
 }

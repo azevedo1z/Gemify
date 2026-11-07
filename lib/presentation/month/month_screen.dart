@@ -29,7 +29,7 @@ class MonthScreen extends ConsumerWidget {
       };
 }
 
-enum _MenuAction { exportBackup, importBackup }
+enum _MenuAction { exportBackup, importBackup, about }
 
 class _OpenMonthPage extends ConsumerWidget {
   const _OpenMonthPage({required this.month});
@@ -61,6 +61,11 @@ class _OpenMonthPage extends ConsumerWidget {
             onSelected: (action) => switch (action) {
               _MenuAction.exportBackup => exportBackup(context, ref),
               _MenuAction.importBackup => importBackup(context, ref),
+              _MenuAction.about => showAboutDialog(
+                context: context,
+                applicationName: l10n.appTitle,
+                applicationLegalese: l10n.aboutDisclaimer,
+              ),
             },
             itemBuilder: (_) => [
               PopupMenuItem(
@@ -70,6 +75,10 @@ class _OpenMonthPage extends ConsumerWidget {
               PopupMenuItem(
                 value: _MenuAction.importBackup,
                 child: Text(l10n.importBackup),
+              ),
+              PopupMenuItem(
+                value: _MenuAction.about,
+                child: Text(l10n.about),
               ),
             ],
           ),

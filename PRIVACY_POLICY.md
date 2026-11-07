@@ -25,4 +25,4 @@ Android automatic backup and device-to-device transfer are disabled for Gemify. 
 
 ## Contact
 
-Questions about this policy: [@azevedo1z](https://github.com/azevedo1z) on GitHub.
+Questions about this policy: [azevedogabicodes@gmail.com](mailto:azevedogabicodes@gmail.com), or [@azevedo1z](https://github.com/azevedo1z) on GitHub.
