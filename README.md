@@ -124,29 +124,15 @@ On Google Play, the app uses Play App Signing: Google signs what users download,
 
 ## Releases
 
-Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and live only on [GitHub Releases](https://github.com/azevedo1z/Gemify/releases); there is no changelog file. Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and the release notes are built from them. Pushing a `vX.Y.Z` tag runs the [release workflow](.github/workflows/release.yml), which:
-
-1. checks that the tag matches the `version` in `pubspec.yaml`;
-2. runs the analyzer and the tests;
-3. builds the signed APK and the Android App Bundle;
-4. creates the GitHub Release with the APK, the bundle, their SHA-256 checksums and notes grouped from the commits since the previous tag (features, fixes, other changes).
-
-The bundle (`.aab`) is the file uploaded to Google Play; the APK is for installing directly on a device.
+Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and live only on [GitHub Releases](https://github.com/azevedo1z/Gemify/releases); there is no changelog file. Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and the release notes are built from them. Pushing a `vX.Y.Z` tag runs the [release workflow](.github/workflows/release.yml), which checks that the tag matches the `version` in `pubspec.yaml` and creates the GitHub Release with notes grouped from the commits since the previous tag (features, fixes, other changes). Each release carries only the source code; signed builds are made locally (see [Building a release](#building-a-release)).
 
 To cut a release:
 
-1. Set `version: X.Y.Z+N` in `pubspec.yaml`, with a build number `N` higher than the previous one.
+1. Set `version: X.Y.Z+N` in `pubspec.yaml`. `X.Y.Z` is the version name and must match the tag; `N` is the build number (Android `versionCode`), which must be higher than the previous one for every Google Play upload.
 2. Commit `chore(release): vX.Y.Z` and push to `master`.
 3. Run `git tag vX.Y.Z` and `git push origin vX.Y.Z`.
 
 The notes can be edited on the release page afterwards.
-
-The workflow needs two repository secrets to sign the builds:
-
-| Secret | Value |
-|---|---|
-| `GEMIFY_KEYSTORE_BASE64` | The keystore in base64. In PowerShell: `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\gemify-release.jks"))` |
-| `GEMIFY_KEYSTORE_PASSWORD` | The keystore password, the same as in `key.properties` |
 
 ## Data and backup
 

@@ -124,29 +124,15 @@ No Google Play, o app usa o Play App Signing: o Google assina o que os usuários
 
 ## Releases
 
-As versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/) e ficam apenas nas [GitHub Releases](https://github.com/azevedo1z/Gemify/releases); não há arquivo de changelog. Os commits seguem os [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), e as notas da release são montadas a partir deles. Enviar uma tag `vX.Y.Z` dispara o [workflow de release](.github/workflows/release.yml), que:
-
-1. confere se a tag bate com o `version` do `pubspec.yaml`;
-2. roda o analisador e os testes;
-3. gera o APK e o Android App Bundle assinados;
-4. cria a GitHub Release com o APK, o bundle, os checksums SHA-256 e as notas agrupadas a partir dos commits desde a tag anterior (funcionalidades, correções, outras mudanças).
-
-O bundle (`.aab`) é o arquivo enviado ao Google Play; o APK serve para instalar direto no aparelho.
+As versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/) e ficam apenas nas [GitHub Releases](https://github.com/azevedo1z/Gemify/releases); não há arquivo de changelog. Os commits seguem os [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), e as notas da release são montadas a partir deles. Enviar uma tag `vX.Y.Z` dispara o [workflow de release](.github/workflows/release.yml), que confere se a tag bate com o `version` do `pubspec.yaml` e cria a GitHub Release com as notas agrupadas a partir dos commits desde a tag anterior (funcionalidades, correções, outras mudanças). Cada release traz só o código-fonte; os builds assinados são feitos localmente (veja [Build de release](#build-de-release)).
 
 Para publicar uma release:
 
-1. Ajuste `version: X.Y.Z+N` no `pubspec.yaml`, com um número de build `N` maior que o anterior.
+1. Ajuste `version: X.Y.Z+N` no `pubspec.yaml`. `X.Y.Z` é o nome da versão e precisa bater com a tag; `N` é o número de build (o `versionCode` do Android), que precisa ser maior que o anterior a cada envio ao Google Play.
 2. Faça o commit `chore(release): vX.Y.Z` e envie para a `master`.
 3. Rode `git tag vX.Y.Z` e `git push origin vX.Y.Z`.
 
 As notas podem ser editadas depois na página da release.
-
-O workflow precisa de dois secrets do repositório para assinar os builds:
-
-| Secret | Valor |
-|---|---|
-| `GEMIFY_KEYSTORE_BASE64` | O keystore em base64. No PowerShell: `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\caminho\para\gemify-release.jks"))` |
-| `GEMIFY_KEYSTORE_PASSWORD` | A senha do keystore, a mesma do `key.properties` |
 
 ## Dados e backup
 
