@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gemify/application/backup/backup_actions.dart';
 import 'package:gemify/application/clock.dart';
@@ -7,6 +8,7 @@ import 'package:gemify/domain/calendar_date.dart';
 import 'package:gemify/domain/expense.dart';
 import 'package:gemify/domain/month.dart';
 import 'package:gemify/presentation/backup/backup_files.dart';
+import 'package:gemify/presentation/theme/theme_preference.dart';
 
 final Provider<Clock> clockProvider = Provider((ref) => systemClock);
 
@@ -82,3 +84,20 @@ final Provider<ImportBackup> importBackupProvider = Provider(
     ref.watch(clockProvider),
   ),
 );
+
+final Provider<ThemeModeStore> themeModeStoreProvider = Provider(
+  (ref) => throw UnimplementedError('Provide the theme store at startup'),
+);
+
+final NotifierProvider<ThemeModeNotifier, ThemeMode> themeModeProvider =
+    NotifierProvider(ThemeModeNotifier.new);
+
+final class ThemeModeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() => ref.watch(themeModeStoreProvider).read();
+
+  Future<void> select(ThemeMode mode) async {
+    state = mode;
+    await ref.read(themeModeStoreProvider).write(mode);
+  }
+}
