@@ -15,7 +15,7 @@ section() {
   local title="$1" types="$2" lines
   lines="$(printf '%s\n' "$subjects" \
     | grep -E "^($types)(\([^)]*\))?!?: " \
-    | sed -E 's/^[a-z]+(\([^)]*\))?(!?): /- \2/; s/^- !/- **Breaking:** /' \
+    | sed -E 's/^[a-z]+(\([^)]*\))?!: /- **Breaking:** /; s/^[a-z]+(\([^)]*\))?: /- /' \
     || true)"
   if [ -n "$lines" ]; then
     printf '## %s\n\n%s\n\n' "$title" "$lines"
@@ -24,7 +24,7 @@ section() {
 
 section 'Features' 'feat'
 section 'Fixes' 'fix'
-section 'Other changes' 'perf|refactor|build|ci|docs|test|style|chore'
+section 'Other changes' 'perf|refactor|revert|build|ci|docs|test|style|chore'
 
 if [ -n "$previous" ]; then
   printf '**Full diff:** https://github.com/%s/compare/%s...%s\n' "$repository" "$previous" "$tag"
