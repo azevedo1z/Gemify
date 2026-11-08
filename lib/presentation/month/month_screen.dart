@@ -13,6 +13,7 @@ import 'package:gemify/presentation/providers.dart';
 import 'package:gemify/presentation/shared/month_view.dart';
 import 'package:gemify/presentation/shared/reference_picker.dart';
 import 'package:gemify/presentation/shared/share_text.dart';
+import 'package:gemify/presentation/theme/theme_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MonthScreen extends ConsumerWidget {
@@ -29,7 +30,7 @@ class MonthScreen extends ConsumerWidget {
       };
 }
 
-enum _MenuAction { exportBackup, importBackup, about }
+enum _MenuAction { exportBackup, importBackup, theme, about }
 
 class _OpenMonthPage extends ConsumerWidget {
   const _OpenMonthPage({required this.month});
@@ -61,6 +62,7 @@ class _OpenMonthPage extends ConsumerWidget {
             onSelected: (action) => switch (action) {
               _MenuAction.exportBackup => exportBackup(context, ref),
               _MenuAction.importBackup => importBackup(context, ref),
+              _MenuAction.theme => _pickTheme(context, ref),
               _MenuAction.about => showAboutDialog(
                 context: context,
                 applicationName: l10n.appTitle,
@@ -75,6 +77,10 @@ class _OpenMonthPage extends ConsumerWidget {
               PopupMenuItem(
                 value: _MenuAction.importBackup,
                 child: Text(l10n.importBackup),
+              ),
+              PopupMenuItem(
+                value: _MenuAction.theme,
+                child: Text(l10n.theme),
               ),
               PopupMenuItem(
                 value: _MenuAction.about,
@@ -102,6 +108,15 @@ class _OpenMonthPage extends ConsumerWidget {
       ),
       bottomNavigationBar: AuditBar(summary: month.summary),
     );
+  }
+
+  Future<void> _pickTheme(BuildContext context, WidgetRef ref) async {
+    final picked = await pickThemeMode(
+      context,
+      initial: ref.read(themeModeProvider),
+    );
+    if (picked == null) return;
+    await ref.read(themeModeProvider.notifier).select(picked);
   }
 
   Future<void> _editReference(BuildContext context, WidgetRef ref) async {

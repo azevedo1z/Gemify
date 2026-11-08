@@ -58,6 +58,7 @@ O Gemify mantém as mesmas regras e as torna determinísticas: valores em centav
 - **Compartilhar.** Um resumo em texto de qualquer mês, no formato da Gem, pela folha de compartilhamento do Android.
 - **Backup.** Exportação em JSON versionado com todos os meses, gastos e alterações, e importação que valida o arquivo inteiro antes de substituir qualquer coisa.
 - **Histórico de alterações.** Toda escrita registra os valores antigo e novo na mesma transação.
+- **Tema.** Claro, escuro ou seguindo o sistema, escolhido pelo menu.
 
 ## Como funciona
 

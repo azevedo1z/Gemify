@@ -5,6 +5,7 @@ import 'package:gemify/presentation/app.dart';
 import 'package:gemify/presentation/providers.dart';
 
 import 'fake_backup_files.dart';
+import 'fake_theme_mode_store.dart';
 import 'memory_repository.dart';
 
 typedef Seed = Future<void> Function(MemoryRepository memory);
@@ -13,9 +14,10 @@ void testApp(
   String description,
   Future<void> Function(AppHarness app) body, {
   Seed? seed,
+  ThemeMode themeMode = ThemeMode.system,
 }) {
   testWidgets(description, (tester) async {
-    final app = await AppHarness._start(tester, seed);
+    final app = await AppHarness._start(tester, seed, themeMode);
     try {
       await body(app);
     } finally {
@@ -25,7 +27,8 @@ void testApp(
 }
 
 final class AppHarness {
-  AppHarness._(this.tester, this.memory);
+  AppHarness._(this.tester, this.memory, ThemeMode themeMode)
+    : themeModeStore = FakeThemeModeStore(themeMode);
 
   static const phoneSize = Size(1080, 2400);
   static const phonePixelRatio = 3.0;
@@ -33,19 +36,24 @@ final class AppHarness {
   static const _step = Duration(milliseconds: 1);
   static const _maxSteps = 1000;
 
-  static Future<AppHarness> _start(WidgetTester tester, Seed? seed) async {
+  static Future<AppHarness> _start(
+    WidgetTester tester,
+    Seed? seed,
+    ThemeMode themeMode,
+  ) async {
     tester.view.physicalSize = const Size(1080, 4000);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final memory = await _drive(tester, MemoryRepository.open());
     if (seed != null) await _drive(tester, seed(memory));
-    final harness = AppHarness._(tester, memory);
+    final harness = AppHarness._(tester, memory, themeMode);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           monthRepositoryProvider.overrideWithValue(memory.repository),
           clockProvider.overrideWithValue(memory.clock.call),
           backupFilesProvider.overrideWithValue(harness.files),
+          themeModeStoreProvider.overrideWithValue(harness.themeModeStore),
         ],
         child: const GemifyApp(),
       ),
@@ -83,6 +91,7 @@ final class AppHarness {
   final WidgetTester tester;
   final MemoryRepository memory;
   final FakeBackupFiles files = FakeBackupFiles();
+  final FakeThemeModeStore themeModeStore;
 
   Future<void> settle() => tester.pumpAndSettle();
 

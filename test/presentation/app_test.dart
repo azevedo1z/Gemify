@@ -289,6 +289,29 @@ void main() {
     ),
   );
 
+  testApp('follows the system theme by default', (app) async {
+    expect(_themeMode(app), ThemeMode.system);
+  });
+
+  testApp('switches to the dark theme and saves the choice', (app) async {
+    await app.tap(find.byIcon(Icons.more_horiz_rounded));
+    await app.tap(find.text('Tema'));
+    await app.tap(find.text('Escuro'));
+
+    expect(_themeMode(app), ThemeMode.dark);
+    expect(_brightness(app), Brightness.dark);
+    expect(app.themeModeStore.stored, ThemeMode.dark);
+  });
+
+  testApp(
+    'starts with the saved theme',
+    (app) async {
+      expect(_themeMode(app), ThemeMode.dark);
+      expect(_brightness(app), Brightness.dark);
+    },
+    themeMode: ThemeMode.dark,
+  );
+
   testApp('the about dialog shows the disclaimer and the licenses', (
     app,
   ) async {
@@ -309,3 +332,9 @@ void main() {
     expect(find.byType(LicensePage), findsOneWidget);
   });
 }
+
+ThemeMode? _themeMode(AppHarness app) =>
+    app.tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode;
+
+Brightness _brightness(AppHarness app) =>
+    Theme.of(app.tester.element(find.byType(Scaffold).first)).brightness;

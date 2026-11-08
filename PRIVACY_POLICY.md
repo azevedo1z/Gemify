@@ -1,12 +1,12 @@
 # Privacy policy
 
-Last updated: 2026-11-07
+Last updated: 2026-11-08
 
 Gemify is a personal finance app for Android. This policy describes what it does with your data.
 
 ## Data the app stores
 
-Gemify stores only what you type: your monthly income, your expenses (name, amount, installments and date), the month references and a log of the changes you make. Everything is kept in a database inside the app's private storage on your phone.
+Gemify stores only what you type: your monthly income, your expenses (name, amount, installments and date), the month references and a log of the changes you make. Everything is kept in a database inside the app's private storage on your phone. The app also remembers your theme choice (light, dark or system) in the same private storage.
 
 ## Data the app collects or shares
 

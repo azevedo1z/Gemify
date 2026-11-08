@@ -58,6 +58,7 @@ Gemify keeps the same rules and makes them deterministic: amounts are integer ce
 - **Share.** A plain-text summary of any month in the Gem's layout, through the Android share sheet.
 - **Backup.** A versioned JSON export of every month, expense and change, and an import that validates the whole file before replacing anything.
 - **Change log.** Every write records the old and new values in the same transaction.
+- **Theme.** Light, dark or following the system, chosen from the menu.
 
 ## How it works
 
