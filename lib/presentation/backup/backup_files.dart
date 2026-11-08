@@ -25,13 +25,17 @@ final class PickerBackupFiles implements BackupFiles {
 
   @override
   Future<String?> open() async {
-    final files = await FilePicker.pickFiles();
-    if (files.isEmpty) return null;
-    final file = files.first;
-    final length = await file.length();
-    if (length == null || length > _maxBytes) {
-      throw const FormatException('The file is unreadable or too large');
+    try {
+      final files = await FilePicker.pickFiles();
+      if (files.isEmpty) return null;
+      final file = files.first;
+      final length = await file.length();
+      if (length == null || length > _maxBytes) {
+        throw const FormatException('The file is unreadable or too large');
+      }
+      return utf8.decode(await file.readAsBytes());
+    } finally {
+      await FilePicker.clearTemporaryFiles();
     }
-    return utf8.decode(await file.readAsBytes());
   }
 }
