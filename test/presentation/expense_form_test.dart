@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gemify/presentation/providers.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../support/app_finders.dart';
@@ -150,5 +151,58 @@ void main() {
     seed: (memory) => memory.repository.addExpense(
       variable('Pão', '7,00', on: defaultToday),
     ),
+  );
+
+  testApp('back is ignored while a save is in progress', (app) async {
+    await app.tap(find.byType(FloatingActionButton));
+    await app.enter(field('Nome'), 'Pão');
+    await app.enter(field('Valor'), '700');
+    app.repository.holdWrites();
+    await app.tap(saveButton);
+
+    await app.pressBack();
+    expect(find.text('Novo gasto variável'), findsOneWidget);
+
+    app.repository.releaseWrites();
+    await app.settle();
+    expect(find.text('Pão'), findsOneWidget);
+    expect(find.text('nov/2026'), findsOneWidget);
+  });
+
+  testApp(
+    'saving an item deleted meanwhile says so and keeps the form open',
+    (app) async {
+      await app.tap(find.text('Condomínio'));
+      final month = await app.wait(app.memory.repository.openMonth());
+      await app.wait(
+        app.memory.repository.deleteExpense(month.entries.single.id),
+      );
+      await app.enter(field('Valor'), '80000');
+
+      await app.tap(saveButton);
+
+      expect(app.tester.takeException(), isA<Exception>());
+      expect(find.text('Erro. Nada foi alterado.'), findsOneWidget);
+      expect(find.text('Gasto fixo'), findsOneWidget);
+      expect(isEnabled(app.tester, saveButton), isTrue);
+    },
+    seed: seedRent,
+  );
+
+  testApp(
+    'the form still works when the used names fail to load',
+    (app) async {
+      await app.tap(find.byType(FloatingActionButton));
+      await app.enter(field('Nome'), 'Pão');
+      await app.enter(field('Valor'), '700');
+      await app.tap(saveButton);
+
+      expect(find.text('Pão'), findsOneWidget);
+    },
+    overrides: [
+      usedNamesProvider.overrideWith(
+        (ref, category) => Future.error(Exception('names')),
+      ),
+    ],
   );
 }

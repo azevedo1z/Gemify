@@ -3,12 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gemify/application/month_actions.dart';
 import 'package:gemify/domain/calendar_date.dart';
 import 'package:gemify/domain/expense.dart';
 import 'package:gemify/domain/expense_entry.dart';
 import 'package:gemify/domain/expense_rules.dart';
 import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
 import 'package:gemify/domain/names.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/providers.dart';
@@ -19,6 +19,7 @@ import 'package:gemify/presentation/shared/grouped_section.dart';
 import 'package:gemify/presentation/shared/labels.dart';
 import 'package:gemify/presentation/shared/money_field.dart';
 import 'package:gemify/presentation/shared/money_input.dart';
+import 'package:gemify/presentation/shared/navigation.dart';
 import 'package:gemify/presentation/theme/metrics.dart';
 
 Future<void> openExpenseForm(
@@ -117,27 +118,17 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     });
     final built = _buildExpense(current, total);
     if (built == null) return;
-    final expense = built.withName(Names.clean(built.name));
-    final errors = ExpenseRules.errors(
-      expense,
-      status: MonthStatus.open,
-      today: ref.read(todayProvider).call(),
-    );
-    setState(() => _errors = errors);
-    if (errors.isNotEmpty) return;
     await _run(() async {
-      final month = await ref.read(openMonthProvider.future);
-      final warnings = ExpenseRules.warnings(
-        expense,
-        month: month,
-        original: widget.entry,
-      );
-      if (warnings.isNotEmpty && !await _confirm(warnings, expense, month)) {
-        return false;
-      }
+      final check = await ref
+          .read(checkExpenseProvider)
+          .call(built, original: widget.entry);
+      if (!mounted) return false;
+      setState(() => _errors = check.errors);
+      if (!check.isValid) return false;
+      if (check.warnings.isNotEmpty && !await _confirm(check)) return false;
       await ref
           .read(saveExpenseProvider)
-          .call(expense, replacingId: widget.entry?.id);
+          .call(check.expense, replacingId: widget.entry?.id);
       return true;
     });
   }
@@ -145,7 +136,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   Future<void> _run(Future<bool> Function() action) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
     setState(() => _busy = true);
     var done = false;
     try {
@@ -155,17 +145,12 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     } finally {
       if (!done && mounted) setState(() => _busy = false);
     }
-    if (done) navigator.pop();
+    if (!done || !mounted) return;
+    popIfCurrent(context);
   }
 
-  Future<bool> _confirm(
-    Set<ExpenseWarning> warnings,
-    Expense expense,
-    Month month,
-  ) {
+  Future<bool> _confirm(ExpenseCheck check) {
     final l10n = AppLocalizations.of(context);
-    final added = ExpenseRules.addedAmount(expense, original: widget.entry);
-    final balance = month.summary.balance ?? Money.zero;
     return showConfirmDialog(
       context,
       title: l10n.warningTitle,
@@ -174,11 +159,11 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final warning in warnings)
+          for (final warning in check.warnings)
             Text(switch (warning) {
               ExpenseWarning.exceedsBalance => l10n.warningExceedsBalance(
-                formatMoney(added),
-                formatMoney(balance),
+                formatMoney(check.addedAmount),
+                formatMoney(check.balance ?? Money.zero),
               ),
               ExpenseWarning.possibleDuplicate => l10n.warningPossibleDuplicate,
             }),
@@ -236,63 +221,69 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       ExpenseError.dateMissing,
       ExpenseError.dateInFuture,
     }, l10n);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title(l10n)),
-        actions: [
-          if (entry != null)
-            IconButton(
-              tooltip: l10n.delete,
-              color: scheme.error,
-              onPressed: _busy ? null : () => _delete(entry),
-              icon: const Icon(Icons.delete_outline_rounded),
-            ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.only(top: Metrics.inset),
-        children: [
-          GroupedSection(
-            children: [
-              _nameField(l10n),
-              MoneyField(
-                controller: _amount,
-                label: _isInstallment
-                    ? l10n.installmentAmountLabel
-                    : l10n.amountLabel,
-                errorText: _errorText({
-                  ExpenseError.amountNotPositive,
-                  ExpenseError.amountAboveMax,
-                }, l10n),
+    return PopScope(
+      canPop: !_busy,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_title(l10n)),
+          actions: [
+            if (entry != null)
+              IconButton(
+                tooltip: l10n.delete,
+                color: scheme.error,
+                onPressed: _busy ? null : () => _delete(entry),
+                icon: const Icon(Icons.delete_outline_rounded),
               ),
-              if (widget.category == ExpenseCategory.variable)
-                ListTile(
-                  title: Text(l10n.dateLabel),
-                  trailing: Text(
-                    dateError ?? formatDate(_spentOn),
-                    style: TextStyle(
-                      color: dateError == null ? scheme.primary : scheme.error,
-                    ),
-                  ),
-                  onTap: _pickDate,
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.only(top: Metrics.inset),
+          children: [
+            GroupedSection(
+              children: [
+                _nameField(l10n),
+                MoneyField(
+                  controller: _amount,
+                  label: _isInstallment
+                      ? l10n.installmentAmountLabel
+                      : l10n.amountLabel,
+                  errorText: _errorText({
+                    ExpenseError.amountNotPositive,
+                    ExpenseError.amountAboveMax,
+                  }, l10n),
                 ),
-            ],
-          ),
-          if (_isInstallment) _counterFields(l10n),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Metrics.inset),
-            child: FilledButton(
-              onPressed: _busy ? null : _save,
-              child: Text(l10n.save),
+                if (widget.category == ExpenseCategory.variable)
+                  ListTile(
+                    title: Text(l10n.dateLabel),
+                    trailing: Text(
+                      dateError ?? formatDate(_spentOn),
+                      style: TextStyle(
+                        color: dateError == null
+                            ? scheme.primary
+                            : scheme.error,
+                      ),
+                    ),
+                    onTap: _pickDate,
+                  ),
+              ],
             ),
-          ),
-        ],
+            if (_isInstallment) _counterFields(l10n),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Metrics.inset),
+              child: FilledButton(
+                onPressed: _busy ? null : _save,
+                child: Text(l10n.save),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _nameField(AppLocalizations l10n) {
-    final names = ref.watch(usedNamesProvider(widget.category)).value ?? [];
+    final names =
+        ref.watch(usedNamesProvider(widget.category)).valueOrNull ?? [];
     return RawAutocomplete<String>(
       textEditingController: _name,
       focusNode: _nameFocus,
@@ -357,7 +348,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       ExpenseError.installmentCurrentOutOfRange,
     }, l10n);
     final totalError = _errorText({
-      ExpenseError.installmentTotalBelowTwo,
+      ExpenseError.installmentTotalBelowMinimum,
     }, l10n);
     return GroupedSection(
       children: [

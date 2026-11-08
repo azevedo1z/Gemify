@@ -6,6 +6,7 @@ import 'package:gemify/presentation/providers.dart';
 
 import 'fake_backup_files.dart';
 import 'fake_theme_mode_store.dart';
+import 'holdable_repository.dart';
 import 'memory_repository.dart';
 
 typedef Seed = Future<void> Function(MemoryRepository memory);
@@ -15,9 +16,10 @@ void testApp(
   Future<void> Function(AppHarness app) body, {
   Seed? seed,
   ThemeMode themeMode = ThemeMode.system,
+  List<Override> overrides = const [],
 }) {
   testWidgets(description, (tester) async {
-    final app = await AppHarness._start(tester, seed, themeMode);
+    final app = await AppHarness._start(tester, seed, themeMode, overrides);
     try {
       await body(app);
     } finally {
@@ -28,7 +30,8 @@ void testApp(
 
 final class AppHarness {
   AppHarness._(this.tester, this.memory, ThemeMode themeMode)
-    : themeModeStore = FakeThemeModeStore(themeMode);
+    : repository = HoldableRepository(memory.repository),
+      themeModeStore = FakeThemeModeStore(themeMode);
 
   static const phoneSize = Size(1080, 2400);
   static const phonePixelRatio = 3.0;
@@ -40,6 +43,7 @@ final class AppHarness {
     WidgetTester tester,
     Seed? seed,
     ThemeMode themeMode,
+    List<Override> overrides,
   ) async {
     tester.view.physicalSize = const Size(1080, 4000);
     tester.view.devicePixelRatio = 1;
@@ -50,10 +54,11 @@ final class AppHarness {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          monthRepositoryProvider.overrideWithValue(memory.repository),
+          monthRepositoryProvider.overrideWithValue(harness.repository),
           clockProvider.overrideWithValue(memory.clock.call),
           backupFilesProvider.overrideWithValue(harness.files),
           themeModeStoreProvider.overrideWithValue(harness.themeModeStore),
+          ...overrides,
         ],
         child: const GemifyApp(),
       ),
@@ -90,6 +95,7 @@ final class AppHarness {
 
   final WidgetTester tester;
   final MemoryRepository memory;
+  final HoldableRepository repository;
   final FakeBackupFiles files = FakeBackupFiles();
   final FakeThemeModeStore themeModeStore;
 
@@ -104,6 +110,11 @@ final class AppHarness {
 
   Future<void> enter(Finder field, String text) async {
     await tester.enterText(field, text);
+    await settle();
+  }
+
+  Future<void> pressBack() async {
+    await tester.binding.handlePopRoute();
     await settle();
   }
 

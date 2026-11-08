@@ -71,7 +71,7 @@ void main() {
     test('requires at least two installments and a current within range', () {
       expect(
         errorsInOpenMonth(installment('TV', '1,00', 1, 1)),
-        {ExpenseError.installmentTotalBelowTwo},
+        {ExpenseError.installmentTotalBelowMinimum},
       );
       expect(
         errorsInOpenMonth(installment('TV', '1,00', 0, 10)),
@@ -118,6 +118,13 @@ void main() {
         {ExpenseError.dateInFuture},
       );
     });
+  });
+
+  test('ExpenseRules.cleaned cleans the name and keeps the rest', () {
+    expect(
+      ExpenseRules.cleaned(installment('  TV   Sala ', '120,00', 8, 18)),
+      installment('TV Sala', '120,00', 8, 18),
+    );
   });
 
   group('ExpenseRules.warnings, over balance', () {

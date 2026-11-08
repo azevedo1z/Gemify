@@ -46,6 +46,7 @@ abstract final class BackupCodec {
   static const format = 'gemify-backup';
   static const version = 1;
   static const _maxRecordId = 0x7FFFFFFF;
+  static const _byteOrderMark = '\uFEFF';
 
   static String encode(
     BackupSnapshot snapshot, {
@@ -62,7 +63,7 @@ abstract final class BackupCodec {
 
   static BackupReading decode(String text, {required CalendarDate today}) {
     try {
-      final root = _Fields(jsonDecode(text));
+      final root = _Fields(jsonDecode(_withoutByteOrderMark(text)));
       if (root.optional<String>('format') != format) {
         return const BackupRejected(BackupProblem.notGemifyBackup);
       }
@@ -84,6 +85,9 @@ abstract final class BackupCodec {
     }
   }
 
+  static String _withoutByteOrderMark(String text) =>
+      text.startsWith(_byteOrderMark) ? text.substring(1) : text;
+
   static BackupReading _validate(BackupSnapshot snapshot, CalendarDate today) {
     final months = snapshot.months;
     final entries = [for (final month in months) ...month.entries];
@@ -99,7 +103,7 @@ abstract final class BackupCodec {
     final invalidExpense = months.any(
       (month) => month.entries.any(
         (entry) =>
-            Names.clean(entry.expense.name) != entry.expense.name ||
+            !Names.isClean(entry.expense.name) ||
             ExpenseRules.errors(
               entry.expense,
               status: month.status,

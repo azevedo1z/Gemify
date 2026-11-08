@@ -14,6 +14,7 @@ import 'package:gemify/presentation/shared/grouped_section.dart';
 import 'package:gemify/presentation/shared/labels.dart';
 import 'package:gemify/presentation/shared/money_field.dart';
 import 'package:gemify/presentation/shared/money_input.dart';
+import 'package:gemify/presentation/shared/navigation.dart';
 import 'package:gemify/presentation/shared/reference_picker.dart';
 import 'package:gemify/presentation/theme/metrics.dart';
 
@@ -63,11 +64,12 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
       CloseRejected() => null,
     };
     if (plan == null || _closing) return;
-    final navigator = Navigator.of(context);
     setState(() => _closingMonth = month);
-    if (await _monthClosed(plan)) {
-      navigator.pop();
-    } else if (mounted) {
+    final closed = await _monthClosed(plan);
+    if (!mounted) return;
+    if (closed) {
+      popIfCurrent(context);
+    } else {
       setState(() => _closingMonth = null);
     }
   }
@@ -90,25 +92,28 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final watched = ref.watch(openMonthProvider).value;
+    final watched = ref.watch(openMonthProvider).valueOrNull;
     final prepare = ref.watch(prepareCloseProvider);
     final month = _closingMonth ?? watched;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          month == null
-              ? l10n.closeMonth
-              : l10n.closeTitle(formatReference(month.reference, l10n)),
+    return PopScope(
+      canPop: !_closing,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            month == null
+                ? l10n.closeMonth
+                : l10n.closeTitle(formatReference(month.reference, l10n)),
+          ),
         ),
+        body: month == null
+            ? const Center(child: CircularProgressIndicator())
+            : switch (_outcome(prepare, month)) {
+                final CloseRejected rejection
+                    when rejection.errors.any(_blockingErrors.contains) =>
+                  _blocked(month, rejection, l10n),
+                final outcome => _form(month, outcome, l10n),
+              },
       ),
-      body: month == null
-          ? const Center(child: CircularProgressIndicator())
-          : switch (_outcome(prepare, month)) {
-              final CloseRejected rejection
-                  when rejection.errors.any(_blockingErrors.contains) =>
-                _blocked(month, rejection, l10n),
-              final outcome => _form(month, outcome, l10n),
-            },
     );
   }
 

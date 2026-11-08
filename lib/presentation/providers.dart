@@ -46,6 +46,13 @@ final Provider<SetIncome> setIncomeProvider = Provider(
   (ref) => SetIncome(ref.watch(monthRepositoryProvider)),
 );
 
+final Provider<CheckExpense> checkExpenseProvider = Provider(
+  (ref) => CheckExpense(
+    ref.watch(monthRepositoryProvider),
+    ref.watch(clockProvider),
+  ),
+);
+
 final Provider<SaveExpense> saveExpenseProvider = Provider(
   (ref) =>
       SaveExpense(ref.watch(monthRepositoryProvider), ref.watch(clockProvider)),

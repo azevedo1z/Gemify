@@ -2,13 +2,13 @@ import 'package:gemify/application/clock.dart';
 import 'package:gemify/application/month_repository.dart';
 import 'package:gemify/application/rejections.dart';
 import 'package:gemify/domain/expense.dart';
+import 'package:gemify/domain/expense_entry.dart';
 import 'package:gemify/domain/expense_rules.dart';
 import 'package:gemify/domain/income_rules.dart';
 import 'package:gemify/domain/money.dart';
 import 'package:gemify/domain/month.dart';
 import 'package:gemify/domain/month_closing.dart';
 import 'package:gemify/domain/month_timeline.dart';
-import 'package:gemify/domain/names.dart';
 import 'package:gemify/domain/reference_month.dart';
 
 final class StartMonth {
@@ -33,6 +33,50 @@ final class SetIncome {
   }
 }
 
+final class ExpenseCheck {
+  const ExpenseCheck({
+    required this.expense,
+    this.errors = const {},
+    this.warnings = const {},
+    this.addedAmount = Money.zero,
+    this.balance,
+  });
+
+  final Expense expense;
+  final Set<ExpenseError> errors;
+  final Set<ExpenseWarning> warnings;
+  final Money addedAmount;
+  final Money? balance;
+
+  bool get isValid => errors.isEmpty;
+}
+
+final class CheckExpense {
+  const CheckExpense(this._repository, this._clock);
+
+  final MonthRepository _repository;
+  final Clock _clock;
+
+  Future<ExpenseCheck> call(Expense expense, {ExpenseEntry? original}) async {
+    final cleaned = ExpenseRules.cleaned(expense);
+    final errors = _openMonthErrors(cleaned, _clock);
+    if (errors.isNotEmpty) {
+      return ExpenseCheck(expense: cleaned, errors: errors);
+    }
+    final month = await _repository.openMonth();
+    return ExpenseCheck(
+      expense: cleaned,
+      warnings: ExpenseRules.warnings(
+        cleaned,
+        month: month,
+        original: original,
+      ),
+      addedAmount: ExpenseRules.addedAmount(cleaned, original: original),
+      balance: month.summary.balance,
+    );
+  }
+}
+
 final class SaveExpense {
   const SaveExpense(this._repository, this._clock);
 
@@ -40,12 +84,8 @@ final class SaveExpense {
   final Clock _clock;
 
   Future<void> call(Expense expense, {int? replacingId}) async {
-    final cleaned = expense.withName(Names.clean(expense.name));
-    final errors = ExpenseRules.errors(
-      cleaned,
-      status: MonthStatus.open,
-      today: todayFrom(_clock),
-    );
+    final cleaned = ExpenseRules.cleaned(expense);
+    final errors = _openMonthErrors(cleaned, _clock);
     if (errors.isNotEmpty) throw InvalidExpenseException(errors);
     if (replacingId == null) {
       await _repository.addExpense(cleaned);
@@ -54,6 +94,13 @@ final class SaveExpense {
     }
   }
 }
+
+Set<ExpenseError> _openMonthErrors(Expense expense, Clock clock) =>
+    ExpenseRules.errors(
+      expense,
+      status: MonthStatus.open,
+      today: todayFrom(clock),
+    );
 
 final class DeleteExpense {
   const DeleteExpense(this._repository);

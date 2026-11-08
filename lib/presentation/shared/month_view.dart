@@ -133,7 +133,10 @@ class ExpenseTile extends StatelessWidget {
       FixedExpense() => null,
       final InstallmentExpense installment =>
         installment.isLast
-            ? l10n.installmentCounterFinal(installmentCounter(installment))
+            ? l10n.installmentCounterFinal(
+                installmentCounter(installment),
+                l10n.finalInstallment,
+              )
             : installmentCounter(installment),
       VariableExpense(:final spentOn) =>
         spentOn == null ? null : formatDate(spentOn),
