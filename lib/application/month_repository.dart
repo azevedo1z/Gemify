@@ -27,6 +27,22 @@ final class CloseConflictException implements Exception {
   String toString() => 'Month $closingMonthId is no longer open';
 }
 
+final class NoOpenMonthException implements Exception {
+  const NoOpenMonthException();
+
+  @override
+  String toString() => 'There is no open month';
+}
+
+final class ExpenseNotInOpenMonthException implements Exception {
+  const ExpenseNotInOpenMonthException(this.expenseId);
+
+  final int expenseId;
+
+  @override
+  String toString() => 'Expense $expenseId is not in the open month';
+}
+
 abstract interface class MonthRepository {
   Stream<Month> watchOpenMonth();
 

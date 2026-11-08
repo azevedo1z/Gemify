@@ -29,8 +29,10 @@ String expenseErrorMessage(ExpenseError error, AppLocalizations l10n) =>
       ),
       ExpenseError.amountNotPositive => l10n.errorAmountNotPositive,
       ExpenseError.amountAboveMax => l10n.errorAmountAboveMax,
-      ExpenseError.installmentTotalBelowTwo =>
-        l10n.errorInstallmentTotalBelowTwo,
+      ExpenseError.installmentTotalBelowMinimum =>
+        l10n.errorInstallmentTotalBelowMinimum(
+          ExpenseRules.minimumInstallments,
+        ),
       ExpenseError.installmentCurrentOutOfRange =>
         l10n.errorInstallmentCurrentOutOfRange,
       ExpenseError.dateMissing => l10n.errorDateMissing,

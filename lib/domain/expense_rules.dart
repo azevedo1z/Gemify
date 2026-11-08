@@ -10,7 +10,7 @@ enum ExpenseError {
   nameTooLong,
   amountNotPositive,
   amountAboveMax,
-  installmentTotalBelowTwo,
+  installmentTotalBelowMinimum,
   installmentCurrentOutOfRange,
   dateMissing,
   dateInFuture,
@@ -21,6 +21,9 @@ enum ExpenseWarning { exceedsBalance, possibleDuplicate }
 abstract final class ExpenseRules {
   static const nameMaxLength = 80;
   static const minimumInstallments = 2;
+
+  static Expense cleaned(Expense expense) =>
+      expense.withName(Names.clean(expense.name));
 
   static Set<ExpenseError> errors(
     Expense expense, {
@@ -37,7 +40,7 @@ abstract final class ExpenseRules {
         FixedExpense() => const <ExpenseError>{},
         InstallmentExpense(:final current, :final total) => {
           if (total < minimumInstallments)
-            ExpenseError.installmentTotalBelowTwo,
+            ExpenseError.installmentTotalBelowMinimum,
           if (current < 1 || current > total)
             ExpenseError.installmentCurrentOutOfRange,
         },

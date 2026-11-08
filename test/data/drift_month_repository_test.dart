@@ -46,6 +46,31 @@ void main() {
     });
   });
 
+  group('without an open month', () {
+    setUp(() => memory.database.delete(memory.database.months).go());
+
+    test('reads and writes fail with a recoverable exception', () async {
+      final repository = memory.repository;
+      final noOpenMonth = throwsA(isA<NoOpenMonthException>());
+
+      await expectLater(repository.openMonth(), noOpenMonth);
+      await expectLater(repository.setIncome(Money.zero), noOpenMonth);
+      await expectLater(
+        repository.setOpenReference(ReferenceMonth(2026, 12)),
+        noOpenMonth,
+      );
+      await expectLater(
+        repository.addExpense(fixed('Condomínio', '750,00')),
+        noOpenMonth,
+      );
+      await expectLater(
+        repository.updateExpense(1, fixed('Condomínio', '750,00')),
+        noOpenMonth,
+      );
+      await expectLater(repository.deleteExpense(1), noOpenMonth);
+    });
+  });
+
   group('writes on the open month', () {
     test('each change is stored and logged with old and new values', () async {
       final repository = memory.repository;
@@ -229,11 +254,11 @@ void main() {
 
       await expectLater(
         memory.repository.updateExpense(oldId, fixed('Condomínio', '1,00')),
-        throwsStateError,
+        throwsA(isA<ExpenseNotInOpenMonthException>()),
       );
       await expectLater(
         memory.repository.deleteExpense(oldId),
-        throwsStateError,
+        throwsA(isA<ExpenseNotInOpenMonthException>()),
       );
     });
 

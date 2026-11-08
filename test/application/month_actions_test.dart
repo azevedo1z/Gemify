@@ -42,6 +42,48 @@ void main() {
         : false,
   );
 
+  group('CheckExpense', () {
+    late CheckExpense check;
+
+    setUp(() => check = CheckExpense(memory.repository, memory.clock.call));
+
+    test('returns the cleaned expense and its errors', () async {
+      final result = await check(installment('  TV   Sala ', '0,00', 1, 1));
+
+      expect(result.expense, installment('TV Sala', '0,00', 1, 1));
+      expect(result.errors, {
+        ExpenseError.amountNotPositive,
+        ExpenseError.installmentTotalBelowMinimum,
+      });
+      expect(result.isValid, isFalse);
+      expect(result.warnings, isEmpty);
+    });
+
+    test('warns against the open month, counting only the increase', () async {
+      await memory.repository.setIncome(brl('1.000,00'));
+      await memory.repository.addExpense(fixed('Condomínio', '750,00'));
+      final original = (await memory.repository.openMonth()).entries.single;
+
+      final result = await check(
+        fixed('Condomínio', '1.100,00'),
+        original: original,
+      );
+
+      expect(result.isValid, isTrue);
+      expect(result.warnings, {ExpenseWarning.exceedsBalance});
+      expect(result.addedAmount, brl('350,00'));
+      expect(result.balance, brl('250,00'));
+    });
+
+    test('warns about a possible duplicate of a new item', () async {
+      await memory.repository.addExpense(fixed('Condomínio', '750,00'));
+
+      final result = await check(fixed(' condomínio ', '10,00'));
+
+      expect(result.warnings, {ExpenseWarning.possibleDuplicate});
+    });
+  });
+
   group('SaveExpense', () {
     test('cleans the name before storing', () async {
       await SaveExpense(memory.repository, memory.clock.call)(
@@ -65,7 +107,7 @@ void main() {
             'errors',
             {
               ExpenseError.amountNotPositive,
-              ExpenseError.installmentTotalBelowTwo,
+              ExpenseError.installmentTotalBelowMinimum,
             },
           ),
         ),

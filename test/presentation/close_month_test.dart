@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gemify/presentation/close_month/close_month_screen.dart';
+import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:gemify/presentation/providers.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../support/app_finders.dart';
@@ -61,4 +65,39 @@ void main() {
     },
     seed: failingOn('months', seedSampleMonth),
   );
+
+  testApp('back is ignored while the close is in progress', (app) async {
+    await app.tap(find.text('Fechar mês'));
+    app.repository.holdWrites();
+    await app.tap(closeButton);
+
+    await app.pressBack();
+    expect(find.text('Fechar nov/2026'), findsOneWidget);
+
+    app.repository.releaseWrites();
+    await app.settle();
+    expect(find.text('dez/2026'), findsOneWidget);
+  }, seed: seedSampleMonth);
+
+  testWidgets('a failed load of the open month is not a crash', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          openMonthProvider.overrideWith(
+            (ref) => Stream.error(Exception('load')),
+          ),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: CloseMonthScreen(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Fechar mês'), findsOneWidget);
+  });
 }

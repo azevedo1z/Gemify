@@ -8,6 +8,18 @@ void main() {
     });
   });
 
+  group('Names.isClean', () {
+    test('accepts a name with single inner spaces', () {
+      expect(Names.isClean('Compras no mercado'), isTrue);
+    });
+
+    test('rejects outer, repeated or non-space whitespace', () {
+      expect(Names.isClean(' Mercado'), isFalse);
+      expect(Names.isClean('Compras  no mercado'), isFalse);
+      expect(Names.isClean('Compras\nno mercado'), isFalse);
+    });
+  });
+
   group('Names.key', () {
     test('ignores case, accents and extra spaces', () {
       expect(Names.key(' Pão '), Names.key('pao'));

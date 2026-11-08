@@ -79,9 +79,11 @@ final class DriftMonthRepository implements MonthRepository {
   }
 
   @override
-  Future<Month> openMonth() async => _monthsOf(
-    await _monthsWhere(_db.months.status.equals(_open)).get(),
-  ).single;
+  Future<Month> openMonth() async =>
+      _monthsOf(
+        await _monthsWhere(_db.months.status.equals(_open)).get(),
+      ).singleOrNull ??
+      (throw const NoOpenMonthException());
 
   @override
   Future<ReferenceMonth?> latestClosedReference() async {
@@ -467,7 +469,7 @@ final class DriftMonthRepository implements MonthRepository {
     final row = await (_db.select(
       _db.months,
     )..where((month) => month.status.equals(_open))).getSingleOrNull();
-    return row ?? (throw StateError('There is no open month'));
+    return row ?? (throw const NoOpenMonthException());
   }
 
   Future<ExpenseRow> _openExpenseRow(int id, int openMonthId) async {
@@ -476,7 +478,7 @@ final class DriftMonthRepository implements MonthRepository {
               (item) => item.id.equals(id) & item.monthId.equals(openMonthId),
             ))
             .getSingleOrNull();
-    return row ?? (throw StateError('Expense $id is not in the open month'));
+    return row ?? (throw ExpenseNotInOpenMonthException(id));
   }
 
   Future<int> _updateOpenMonth(int id, MonthsCompanion changes) =>

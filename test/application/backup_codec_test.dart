@@ -40,6 +40,15 @@ void main() {
     );
   });
 
+  test('accepts a file saved with a byte order mark', () {
+    final reading = BackupCodec.decode(
+      '\uFEFF${jsonEncode(validBackup())}',
+      today: defaultToday,
+    );
+
+    expect(reading, isA<BackupAccepted>());
+  });
+
   group('rejects, without writing anything,', () {
     final cases =
         <String, (BackupProblem, void Function(Map<String, Object?>))>{

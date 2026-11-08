@@ -31,6 +31,8 @@ abstract final class Names {
 
   static String clean(String raw) => raw.trim().replaceAll(_whitespace, ' ');
 
+  static bool isClean(String name) => clean(name) == name;
+
   static String key(String name) {
     final buffer = StringBuffer();
     for (final rune in clean(name).toLowerCase().runes) {
