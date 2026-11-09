@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/theme/app_theme.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/theme/app_theme.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context, {

@@ -1,6 +1,6 @@
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/money.dart';
 import 'package:meta/meta.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/money.dart';
 
 @immutable
 final class MonthSummary {

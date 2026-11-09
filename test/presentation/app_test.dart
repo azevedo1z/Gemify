@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/app_finders.dart';
 import '../support/app_harness.dart';
@@ -17,7 +17,7 @@ void main() {
   });
 
   testApp(
-    'shows the sections in the Gem order and the audit line',
+    'shows the sections in category order and the audit line',
     (
       app,
     ) async {

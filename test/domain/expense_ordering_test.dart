@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/expense_ordering.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/expense_ordering.dart';
 
 import '../support/builders.dart';
 
@@ -11,7 +11,7 @@ List<int> idsOf(List<ExpenseEntry> entries) => [
 
 void main() {
   group('ExpenseOrdering', () {
-    test('groups by category in the Gem order', () {
+    test('groups by category in the fixed order', () {
       final sorted = ExpenseOrdering.sorted([
         entry(1, variable('Pão', '7,00', on: defaultToday)),
         entry(2, installment('Monitor', '60,00', 7, 9)),

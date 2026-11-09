@@ -27,7 +27,7 @@ jobs:
       - name: Create the GitHub Release
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            --title "Gemify $GITHUB_REF_NAME" \
+            --title "OffMoney $GITHUB_REF_NAME" \
             --notes-file "$RUNNER_TEMP/notes.md" \
             --verify-tag
         env:

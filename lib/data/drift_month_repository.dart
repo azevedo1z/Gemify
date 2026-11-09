@@ -1,27 +1,27 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/application/backup/expense_json.dart';
-import 'package:gemify/application/change_log_entry.dart';
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/data/gemify_database.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/application/backup/expense_json.dart';
+import 'package:offmoney/application/change_log_entry.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/data/offmoney_database.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 typedef _MonthGroup = ({MonthRow month, List<ExpenseEntry> entries});
 
 final class DriftMonthRepository implements MonthRepository {
   DriftMonthRepository(this._db, {required Clock clock}) : _clock = clock;
 
-  final GemifyDatabase _db;
+  final OffMoneyDatabase _db;
   final Clock _clock;
 
   static final String _open = MonthStatus.open.name;

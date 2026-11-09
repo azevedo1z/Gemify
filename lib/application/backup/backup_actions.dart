@@ -1,7 +1,7 @@
-import 'package:gemify/application/backup/backup_codec.dart';
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/application/month_repository.dart';
+import 'package:offmoney/application/backup/backup_codec.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/application/month_repository.dart';
 
 final class ExportBackup {
   const ExportBackup(this._repository, this._clock);
@@ -9,7 +9,7 @@ final class ExportBackup {
   final MonthRepository _repository;
   final Clock _clock;
 
-  String fileName() => 'gemify-backup-${todayFrom(_clock).iso}.json';
+  String fileName() => 'offmoney-backup-${todayFrom(_clock).iso}.json';
 
   Future<String> call() async =>
       BackupCodec.encode(await _repository.snapshot(), exportedAt: _clock());

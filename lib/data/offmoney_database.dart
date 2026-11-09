@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-part 'gemify_database.g.dart';
+part 'offmoney_database.g.dart';
 
 @DataClassName('MonthRow')
 @TableIndex.sql(
@@ -89,8 +89,8 @@ class ChangeLog extends Table {
 }
 
 @DriftDatabase(tables: [Months, Expenses, ChangeLog])
-class GemifyDatabase extends _$GemifyDatabase {
-  GemifyDatabase(super.e);
+class OffMoneyDatabase extends _$OffMoneyDatabase {
+  OffMoneyDatabase(super.e);
 
   @override
   int get schemaVersion => 1;

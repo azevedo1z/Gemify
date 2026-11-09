@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/rejections.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/shared/failure.dart';
-import 'package:gemify/presentation/shared/money_field.dart';
-import 'package:gemify/presentation/shared/money_input.dart';
-import 'package:gemify/presentation/shared/navigation.dart';
+import 'package:offmoney/application/rejections.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/shared/failure.dart';
+import 'package:offmoney/presentation/shared/money_field.dart';
+import 'package:offmoney/presentation/shared/money_input.dart';
+import 'package:offmoney/presentation/shared/navigation.dart';
 
 Future<void> editIncome(BuildContext context, {required Money? current}) =>
     showDialog<void>(

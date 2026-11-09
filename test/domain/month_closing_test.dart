@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/builders.dart';
 import '../support/sample_cycle.dart';

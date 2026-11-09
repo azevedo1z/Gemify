@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/backup/backup_actions.dart';
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/application/month_actions.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/presentation/backup/backup_files.dart';
-import 'package:gemify/presentation/theme/theme_preference.dart';
+import 'package:offmoney/application/backup/backup_actions.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/application/month_actions.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/presentation/backup/backup_files.dart';
+import 'package:offmoney/presentation/theme/theme_preference.dart';
 
 final Provider<Clock> clockProvider = Provider((ref) => systemClock);
 

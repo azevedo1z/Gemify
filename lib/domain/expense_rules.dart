@@ -1,9 +1,9 @@
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/names.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/names.dart';
 
 enum ExpenseError {
   nameEmpty,

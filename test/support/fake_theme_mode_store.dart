@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/theme/theme_preference.dart';
+import 'package:offmoney/presentation/theme/theme_preference.dart';
 
 final class FakeThemeModeStore implements ThemeModeStore {
   FakeThemeModeStore(this.stored);

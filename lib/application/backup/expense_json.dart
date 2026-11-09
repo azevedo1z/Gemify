@@ -1,4 +1,4 @@
-import 'package:gemify/domain/expense.dart';
+import 'package:offmoney/domain/expense.dart';
 
 abstract final class ExpenseJson {
   static const category = 'category';

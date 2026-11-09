@@ -1,5 +1,5 @@
-import 'package:gemify/application/month_actions.dart';
-import 'package:gemify/domain/month_closing.dart';
+import 'package:offmoney/application/month_actions.dart';
+import 'package:offmoney/domain/month_closing.dart';
 
 import 'app_harness.dart';
 import 'builders.dart';

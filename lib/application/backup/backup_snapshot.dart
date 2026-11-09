@@ -1,5 +1,5 @@
-import 'package:gemify/application/change_log_entry.dart';
-import 'package:gemify/domain/month.dart';
+import 'package:offmoney/application/change_log_entry.dart';
+import 'package:offmoney/domain/month.dart';
 
 final class BackupSnapshot {
   const BackupSnapshot({required this.months, required this.changeLog});

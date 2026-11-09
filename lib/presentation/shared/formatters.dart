@@ -1,8 +1,8 @@
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
 
 const _centsPerReal = 100;
 const _thousandsGroup = 3;

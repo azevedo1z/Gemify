@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/calendar_date.dart';
+import 'package:offmoney/domain/calendar_date.dart';
 
 void main() {
   group('CalendarDate', () {

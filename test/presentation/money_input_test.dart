@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/presentation/shared/money_input.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/presentation/shared/money_input.dart';
 
 TextEditingValue typed(String text) => TextEditingValue(text: text);
 

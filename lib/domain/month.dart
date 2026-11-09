@@ -1,7 +1,7 @@
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 enum MonthStatus { open, closed }
 

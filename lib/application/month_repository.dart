@@ -1,10 +1,10 @@
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 final class MonthOverview {
   const MonthOverview({

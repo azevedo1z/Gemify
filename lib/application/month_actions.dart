@@ -1,15 +1,15 @@
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/application/rejections.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/income_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/domain/reference_window.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/application/rejections.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/income_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/domain/reference_window.dart';
 
 final class StartMonth {
   const StartMonth(this._repository, this._clock);

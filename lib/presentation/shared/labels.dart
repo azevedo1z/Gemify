@@ -1,8 +1,8 @@
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
 
 String categoryTitle(ExpenseCategory category, AppLocalizations l10n) =>
     switch (category) {

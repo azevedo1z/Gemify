@@ -1,6 +1,6 @@
 # Security policy
 
-Gemify holds personal financial data, so a flaw that exposes that data, corrupts it, or lets a crafted backup file change it without confirmation is treated as a security issue.
+OffMoney holds personal financial data, so a flaw that exposes that data, corrupts it, or lets a crafted backup file change it without confirmation is treated as a security issue.
 
 ## Supported versions
 

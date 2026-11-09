@@ -1,5 +1,5 @@
-import 'package:gemify/domain/expense.dart';
 import 'package:meta/meta.dart';
+import 'package:offmoney/domain/expense.dart';
 
 @immutable
 final class ExpenseEntry {

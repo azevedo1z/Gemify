@@ -1,4 +1,4 @@
-name: gemify
+name: offmoney
 description: "Personal monthly finance for Android, offline and with no AI."
 publish_to: 'none'
 version: 0.3.0+5
@@ -38,7 +38,7 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: assets/icon/gemify-icon.png
+  image_path: assets/icon/offmoney-icon.png
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: assets/icon/gemify-icon.png
+  adaptive_icon_foreground: assets/icon/offmoney-icon.png
   adaptive_icon_foreground_inset: 10

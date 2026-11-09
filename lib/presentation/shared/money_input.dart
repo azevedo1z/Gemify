@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/presentation/shared/formatters.dart';
 
 final _nonDigits = RegExp(r'\D');
 

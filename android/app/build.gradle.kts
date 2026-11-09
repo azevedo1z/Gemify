@@ -31,7 +31,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["appLabel"] = "Gemify"
+        manifestPlaceholders["appLabel"] = "OffMoney"
     }
 
     signingConfigs {
@@ -48,7 +48,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["appLabel"] = "Gemify Dev"
+            manifestPlaceholders["appLabel"] = "OffMoney Dev"
         }
         release {
             signingConfig = signingConfigs.findByName("release")

@@ -6,7 +6,7 @@ body:
     id: problem
     attributes:
       label: Problem
-      description: What do you want to do that Gemify does not support today?
+      description: What do you want to do that OffMoney does not support today?
     validations:
       required: true
   - type: textarea

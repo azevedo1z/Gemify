@@ -1,17 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/shared/share_text.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/shared/share_text.dart';
 
 import '../support/builders.dart';
 
 void main() {
   final l10n = lookupAppLocalizations(const Locale('pt'));
 
-  test('writes the month in the Gem layout', () {
+  test('writes the month in the share layout', () {
     final month = openMonth(
       income: brl('4.800,00'),
       items: entries(<Expense>[

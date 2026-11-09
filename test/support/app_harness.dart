@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/presentation/app.dart';
-import 'package:gemify/presentation/providers.dart';
+import 'package:offmoney/presentation/app.dart';
+import 'package:offmoney/presentation/providers.dart';
 
 import 'fake_backup_files.dart';
 import 'fake_theme_mode_store.dart';
@@ -60,7 +60,7 @@ final class AppHarness {
           themeModeStoreProvider.overrideWithValue(harness.themeModeStore),
           ...overrides,
         ],
-        child: const GemifyApp(),
+        child: const OffMoneyApp(),
       ),
     );
     await harness.settle();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/theme/metrics.dart';
+import 'package:offmoney/presentation/theme/metrics.dart';
 
 class GroupedSection extends StatelessWidget {
   const GroupedSection({

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/domain/reference_window.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/domain/reference_window.dart';
 
 void main() {
   final today = CalendarDate(2026, 11, 7);

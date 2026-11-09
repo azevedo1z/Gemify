@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/shared/labels.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/shared/labels.dart';
 
 void main() {
   final l10n = lookupAppLocalizations(const Locale('pt'));

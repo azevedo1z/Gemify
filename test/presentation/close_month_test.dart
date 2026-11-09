@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/presentation/close_month/close_month_screen.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/providers.dart';
+import 'package:offmoney/presentation/close_month/close_month_screen.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/providers.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../support/app_finders.dart';

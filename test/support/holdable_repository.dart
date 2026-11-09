@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 final class HoldableRepository implements MonthRepository {
   HoldableRepository(this._inner);

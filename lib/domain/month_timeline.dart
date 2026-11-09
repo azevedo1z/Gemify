@@ -1,4 +1,4 @@
-import 'package:gemify/domain/month.dart';
+import 'package:offmoney/domain/month.dart';
 
 enum TimelineError {
   noOpenMonth,

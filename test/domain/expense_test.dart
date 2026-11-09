@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/expense.dart';
+import 'package:offmoney/domain/expense.dart';
 
 import '../support/builders.dart';
 
