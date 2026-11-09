@@ -12,6 +12,7 @@ import 'package:gemify/domain/money.dart';
 import 'package:gemify/domain/names.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/providers.dart';
+import 'package:gemify/presentation/shared/action_row.dart';
 import 'package:gemify/presentation/shared/confirm_dialog.dart';
 import 'package:gemify/presentation/shared/failure.dart';
 import 'package:gemify/presentation/shared/formatters.dart';
@@ -227,13 +228,10 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         appBar: AppBar(
           title: Text(_title(l10n)),
           actions: [
-            if (entry != null)
-              IconButton(
-                tooltip: l10n.delete,
-                color: scheme.error,
-                onPressed: _busy ? null : () => _delete(entry),
-                icon: const Icon(Icons.delete_outline_rounded),
-              ),
+            TextButton(
+              onPressed: _busy ? null : _save,
+              child: Text(l10n.save),
+            ),
           ],
         ),
         body: ListView(
@@ -265,16 +263,19 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
                     ),
                     onTap: _pickDate,
                   ),
+                if (_isInstallment) ..._counterFields(l10n),
               ],
             ),
-            if (_isInstallment) _counterFields(l10n),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Metrics.inset),
-              child: FilledButton(
-                onPressed: _busy ? null : _save,
-                child: Text(l10n.save),
+            if (entry != null)
+              GroupedSection(
+                children: [
+                  ActionRow(
+                    label: l10n.delete,
+                    destructive: true,
+                    onTap: () => _delete(entry),
+                  ),
+                ],
               ),
-            ),
           ],
         ),
       ),
@@ -343,27 +344,25 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     );
   }
 
-  Widget _counterFields(AppLocalizations l10n) {
+  List<Widget> _counterFields(AppLocalizations l10n) {
     final rangeError = _errorText({
       ExpenseError.installmentCurrentOutOfRange,
     }, l10n);
     final totalError = _errorText({
       ExpenseError.installmentTotalBelowMinimum,
     }, l10n);
-    return GroupedSection(
-      children: [
-        _counterField(
-          _current,
-          l10n.currentInstallmentLabel,
-          _currentMissing ? l10n.errorNumberRequired : rangeError,
-        ),
-        _counterField(
-          _total,
-          l10n.totalInstallmentsLabel,
-          _totalMissing ? l10n.errorNumberRequired : totalError,
-        ),
-      ],
-    );
+    return [
+      _counterField(
+        _current,
+        l10n.currentInstallmentLabel,
+        _currentMissing ? l10n.errorNumberRequired : rangeError,
+      ),
+      _counterField(
+        _total,
+        l10n.totalInstallmentsLabel,
+        _totalMissing ? l10n.errorNumberRequired : totalError,
+      ),
+    ];
   }
 
   Widget _counterField(

@@ -6,6 +6,7 @@ import 'package:gemify/domain/money.dart';
 import 'package:gemify/domain/month.dart';
 import 'package:gemify/domain/month_summary.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:gemify/presentation/shared/action_row.dart';
 import 'package:gemify/presentation/shared/formatters.dart';
 import 'package:gemify/presentation/shared/grouped_section.dart';
 import 'package:gemify/presentation/shared/labels.dart';
@@ -53,7 +54,7 @@ class MonthView extends StatelessWidget {
               subtotal: categoryTotal(summary, category),
               onAdd: onAdd == null ? null : () => onAdd(category),
             ),
-            children: _entriesOf(sorted, category, theme, l10n),
+            children: _rowsOf(sorted, category),
           ),
         GroupedSection(
           children: [
@@ -68,48 +69,21 @@ class MonthView extends StatelessWidget {
         ),
         if (onClose != null)
           GroupedSection(
-            children: [
-              ListTile(
-                title: Text(
-                  l10n.closeMonth,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: theme.colorScheme.primary),
-                ),
-                onTap: onClose,
-              ),
-            ],
+            children: [ActionRow(label: l10n.closeMonth, onTap: onClose)],
           ),
       ],
     );
   }
 
-  List<Widget> _entriesOf(
-    List<ExpenseEntry> sorted,
-    ExpenseCategory category,
-    ThemeData theme,
-    AppLocalizations l10n,
-  ) {
+  List<Widget> _rowsOf(List<ExpenseEntry> sorted, ExpenseCategory category) {
     final onEdit = this.onEdit;
-    final entries = [
-      for (final entry in sorted)
-        if (entry.expense.category == category) entry,
-    ];
-    if (entries.isEmpty) {
-      return [
-        ListTile(
-          title: Text(
-            l10n.emptySection,
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ),
-      ];
-    }
     return [
-      for (final entry in entries)
-        ExpenseTile(
-          expense: entry.expense,
-          onTap: onEdit == null ? null : () => onEdit(entry),
-        ),
+      for (final entry in sorted)
+        if (entry.expense.category == category)
+          ExpenseTile(
+            expense: entry.expense,
+            onTap: onEdit == null ? null : () => onEdit(entry),
+          ),
     ];
   }
 }
@@ -175,12 +149,16 @@ class AuditBar extends StatelessWidget {
                   Row(
                     children: [
                       if (negative) ...[
-                        Icon(Icons.warning_amber_rounded, color: scheme.error),
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: scheme.error,
+                          semanticLabel: l10n.negativeBalance,
+                        ),
                         const SizedBox(width: Metrics.headerGap),
                       ],
                       Expanded(
                         child: Text(
-                          negative ? l10n.negativeBalance : l10n.balanceTitle,
+                          l10n.balanceTitle,
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: labelColor,
                           ),
@@ -236,13 +214,7 @@ class _IncomeTile extends StatelessWidget {
     final income = this.income;
     return ListTile(
       title: Text(l10n.incomeTitle),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (income != null) Text(formatMoney(income)),
-          if (onTap != null) const Icon(Icons.chevron_right_rounded),
-        ],
-      ),
+      trailing: income == null ? null : Text(formatMoney(income)),
       onTap: onTap,
     );
   }

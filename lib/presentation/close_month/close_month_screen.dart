@@ -134,7 +134,6 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
       padding: const EdgeInsets.only(top: Metrics.inset),
       children: [
         GroupedSection(
-          header: Text(l10n.closeBlocked),
           children: [
             if (rejection.errors.contains(CloseError.incomeMissing))
               ListTile(leading: problemIcon, title: Text(l10n.incomeRequired)),

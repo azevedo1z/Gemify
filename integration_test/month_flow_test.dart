@@ -31,7 +31,13 @@ void main() {
 
     await tester.tap(find.text('Entrada Mensal').first);
     await tester.pumpAndSettle();
-    await tester.enterText(find.widgetWithText(TextField, 'Valor'), '480000');
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.byType(TextField),
+      ),
+      '480000',
+    );
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
 

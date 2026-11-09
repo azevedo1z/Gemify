@@ -10,7 +10,6 @@ import 'package:gemify/presentation/history/history_screen.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/month/income_dialog.dart';
 import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
 import 'package:gemify/presentation/shared/month_view.dart';
 import 'package:gemify/presentation/shared/reference_picker.dart';
 import 'package:gemify/presentation/shared/share_text.dart';
@@ -133,7 +132,6 @@ class _OpenMonthPage extends ConsumerWidget {
     final picked = await pickReference(
       context,
       title: l10n.changeReference,
-      note: l10n.changeReferenceNote,
       confirmLabel: l10n.save,
       initial: month.reference,
       window: window,
@@ -141,11 +139,6 @@ class _OpenMonthPage extends ConsumerWidget {
     if (picked == null || picked == month.reference) return;
     try {
       await changeReference(picked);
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(l10n.referenceChanged(formatReference(picked, l10n))),
-        ),
-      );
     } on InvalidReferenceException {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.referenceUnavailable)),

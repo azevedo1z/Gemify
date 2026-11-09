@@ -42,9 +42,15 @@ void main() {
         '4.800,00 - (2.504,00 + 790,50 + 0,00) = 1.505,50',
       );
       expect(textOf(tester, const Key('balance')), r'R$ 1.505,50');
+      expect(iconLabeled('Saldo negativo'), findsNothing);
     },
     seed: seedSampleMonth,
   );
+
+  testApp('an empty section shows only its header', (app) async {
+    expect(find.text('Gastos Fixos'), findsOneWidget);
+    expect(find.byType(ListTile), findsNWidgets(3));
+  });
 
   testApp('a month without income shows it as pending', (app) async {
     expect(find.text('Entrada pendente'), findsOneWidget);
@@ -56,7 +62,7 @@ void main() {
     (app) async {
       final balance = find.byKey(const Key('balance'));
 
-      expect(find.text('Saldo negativo'), findsOneWidget);
+      expect(iconLabeled('Saldo negativo'), findsOneWidget);
       expect(
         app.tester.widget<Text>(balance).style?.color,
         Theme.of(app.tester.element(balance)).colorScheme.error,
@@ -72,7 +78,7 @@ void main() {
 
   testApp('sets the income from its tile', (app) async {
     await app.tap(find.text('Entrada Mensal').first);
-    await app.enter(field('Valor'), '480000');
+    await app.enter(dialogField, '480000');
     await app.tap(find.text('Salvar'));
 
     expect(textOf(app.tester, const Key('balance')), r'R$ 4.800,00');
@@ -113,7 +119,7 @@ void main() {
       await app.tap(find.text('Salvar'));
       await app.tap(find.text('Salvar').last);
       expect(find.text('Geladeira'), findsOneWidget);
-      expect(find.text('Saldo negativo'), findsOneWidget);
+      expect(iconLabeled('Saldo negativo'), findsOneWidget);
     },
     seed: (memory) => memory.repository.setIncome(brl('10,00')),
   );
@@ -145,7 +151,7 @@ void main() {
       expect(textOf(app.tester, const Key('balance')), r'R$ 200,00');
 
       await app.tap(find.text('Condomínio'));
-      await app.tap(find.byTooltip('Excluir'));
+      await app.tap(find.text('Excluir'));
       expect(find.text(r'Condomínio: R$ 800,00'), findsOneWidget);
       await app.tap(find.text('Excluir').last);
 
@@ -236,21 +242,11 @@ void main() {
     app,
   ) async {
     await openReferencePicker(app);
-    expect(
-      find.text(
-        'Os lançamentos continuam os mesmos; só muda o nome do mês aberto.',
-      ),
-      findsOneWidget,
-    );
     await app.tap(referenceChip('dez/2026'));
     await app.tap(find.text('Salvar'));
 
     expect(find.text('dez/2026'), findsOneWidget);
     expect(find.text('nov/2026'), findsNothing);
-    expect(
-      find.text('Mês de referência alterado para dez/2026'),
-      findsOneWidget,
-    );
     final month = await app.wait(app.memory.repository.openMonth());
     expect(month.reference, ReferenceMonth(2026, 12));
   });

@@ -3,7 +3,6 @@ import 'package:gemify/domain/reference_month.dart';
 import 'package:gemify/domain/reference_window.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/shared/formatters.dart';
-import 'package:gemify/presentation/theme/metrics.dart';
 
 Future<ReferenceMonth?> pickReference(
   BuildContext context, {
@@ -11,7 +10,6 @@ Future<ReferenceMonth?> pickReference(
   required String confirmLabel,
   required ReferenceMonth initial,
   required ReferenceWindow window,
-  String? note,
 }) => showDialog<ReferenceMonth>(
   context: context,
   builder: (_) => _ReferencePicker(
@@ -19,7 +17,6 @@ Future<ReferenceMonth?> pickReference(
     confirmLabel: confirmLabel,
     initial: initial,
     window: window,
-    note: note,
   ),
 );
 
@@ -29,14 +26,12 @@ class _ReferencePicker extends StatefulWidget {
     required this.confirmLabel,
     required this.initial,
     required this.window,
-    required this.note,
   });
 
   final String title;
   final String confirmLabel;
   final ReferenceMonth initial;
   final ReferenceWindow window;
-  final String? note;
 
   @override
   State<_ReferencePicker> createState() => _ReferencePickerState();
@@ -55,7 +50,6 @@ class _ReferencePickerState extends State<_ReferencePicker> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final note = widget.note;
     final selected = _selected;
     return AlertDialog(
       title: Text(widget.title),
@@ -63,16 +57,6 @@ class _ReferencePickerState extends State<_ReferencePicker> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (note != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Metrics.inset),
-              child: Text(
-                note,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
           if (_firstYear != _lastYear)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
