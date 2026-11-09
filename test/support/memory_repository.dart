@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:gemify/data/drift_month_repository.dart';
-import 'package:gemify/data/gemify_database.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/data/drift_month_repository.dart';
+import 'package:offmoney/data/offmoney_database.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 final class TestClock {
   TestClock([DateTime? start]) : now = start ?? DateTime.utc(2026, 11, 7, 12);
@@ -20,14 +20,14 @@ final class MemoryRepository {
 
   static Future<MemoryRepository> open({ReferenceMonth? firstMonth}) async {
     driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
-    final database = GemifyDatabase(NativeDatabase.memory());
+    final database = OffMoneyDatabase(NativeDatabase.memory());
     final clock = TestClock();
     final repository = DriftMonthRepository(database, clock: clock.call);
     await repository.ensureOpenMonth(firstMonth ?? ReferenceMonth(2026, 11));
     return MemoryRepository._(database, clock, repository);
   }
 
-  final GemifyDatabase database;
+  final OffMoneyDatabase database;
   final TestClock clock;
   final DriftMonthRepository repository;
 

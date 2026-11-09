@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
-import 'package:gemify/presentation/shared/grouped_section.dart';
-import 'package:gemify/presentation/shared/month_view.dart';
-import 'package:gemify/presentation/shared/share_text.dart';
-import 'package:gemify/presentation/theme/metrics.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/shared/formatters.dart';
+import 'package:offmoney/presentation/shared/grouped_section.dart';
+import 'package:offmoney/presentation/shared/month_view.dart';
+import 'package:offmoney/presentation/shared/share_text.dart';
+import 'package:offmoney/presentation/theme/metrics.dart';
 import 'package:share_plus/share_plus.dart';
 
 class HistoryScreen extends ConsumerWidget {

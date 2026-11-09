@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/month/month_screen.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/theme/app_theme.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/month/month_screen.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/theme/app_theme.dart';
 
-class GemifyApp extends ConsumerWidget {
-  const GemifyApp({super.key});
+class OffMoneyApp extends ConsumerWidget {
+  const OffMoneyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

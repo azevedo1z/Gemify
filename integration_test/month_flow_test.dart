@@ -2,13 +2,13 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/data/drift_month_repository.dart';
-import 'package:gemify/data/gemify_database.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/presentation/app.dart';
-import 'package:gemify/presentation/providers.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/data/drift_month_repository.dart';
+import 'package:offmoney/data/offmoney_database.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/presentation/app.dart';
+import 'package:offmoney/presentation/providers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +16,14 @@ void main() {
   testWidgets('first run, add items, close the month and read the history', (
     tester,
   ) async {
-    final database = GemifyDatabase(NativeDatabase.memory());
+    final database = OffMoneyDatabase(NativeDatabase.memory());
     addTearDown(database.close);
     final repository = DriftMonthRepository(database, clock: systemClock);
     await repository.ensureOpenMonth(ReferenceMonth(2026, 11));
     await tester.pumpWidget(
       ProviderScope(
         overrides: [monthRepositoryProvider.overrideWithValue(repository)],
-        child: const GemifyApp(),
+        child: const OffMoneyApp(),
       ),
     );
     await tester.pumpAndSettle();

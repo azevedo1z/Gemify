@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/application/change_log_entry.dart';
-import 'package:gemify/application/month_actions.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/change_log_entry.dart';
+import 'package:offmoney/application/month_actions.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/builders.dart';
 import '../support/memory_repository.dart';

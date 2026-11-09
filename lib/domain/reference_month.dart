@@ -1,5 +1,5 @@
-import 'package:gemify/domain/calendar_date.dart';
 import 'package:meta/meta.dart';
+import 'package:offmoney/domain/calendar_date.dart';
 
 @immutable
 final class ReferenceMonth implements Comparable<ReferenceMonth> {

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/presentation/startup.dart';
+import 'package:offmoney/presentation/startup.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../support/app_seeds.dart';

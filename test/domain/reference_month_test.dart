@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 void main() {
   group('ReferenceMonth', () {

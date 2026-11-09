@@ -68,7 +68,7 @@ void main() {
       await choose(app, 'Importar backup');
 
       expect(
-        find.text('Arquivo inválido: não é um backup do Gemify'),
+        find.text('Arquivo inválido: não é um backup do OffMoney'),
         findsOneWidget,
       );
       expect(find.text('Condomínio'), findsOneWidget);

@@ -1,4 +1,4 @@
-import 'package:gemify/domain/money.dart';
+import 'package:offmoney/domain/money.dart';
 
 abstract final class IncomeRules {
   static bool accepts(Money income) =>

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/shared/money_input.dart';
+import 'package:offmoney/presentation/shared/money_input.dart';
 
 class MoneyField extends StatelessWidget {
   const MoneyField({

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/presentation/backup/backup_files.dart';
+import 'package:offmoney/presentation/backup/backup_files.dart';
 
 const int megabyte = 1024 * 1024;
 
@@ -17,10 +17,10 @@ final class FakePickedFile extends PlatformFile {
   final Exception? readFailure;
 
   @override
-  String get name => 'gemify-backup.json';
+  String get name => 'offmoney-backup.json';
 
   @override
-  Uri get uri => Uri.file('/cache/file_picker/gemify-backup.json');
+  Uri get uri => Uri.file('/cache/file_picker/offmoney-backup.json');
 
   @override
   int? lengthSync() => _length;
@@ -81,9 +81,9 @@ void main() {
 
   group('open clears the copy the picker keeps in its cache', () {
     test('after reading the file', () async {
-      final picker = usePicker([FakePickedFile('{"format": "gemify"}')]);
+      final picker = usePicker([FakePickedFile('{"format": "offmoney"}')]);
 
-      expect(await files.open(), '{"format": "gemify"}');
+      expect(await files.open(), '{"format": "offmoney"}');
       expect(picker.clears, 1);
     });
 

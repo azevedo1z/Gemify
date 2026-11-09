@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_timeline.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_timeline.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/builders.dart';
 

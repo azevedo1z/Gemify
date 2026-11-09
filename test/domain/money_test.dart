@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/money.dart';
+import 'package:offmoney/domain/money.dart';
 
 void main() {
   group('Money', () {

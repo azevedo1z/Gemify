@@ -1,6 +1,6 @@
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/reference_month.dart';
 import 'package:meta/meta.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 @immutable
 final class ReferenceWindow {

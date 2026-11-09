@@ -1,6 +1,6 @@
 # Contributing
 
-Gemify is a personal project, maintained by [@azevedo1z](https://github.com/azevedo1z). These are the conventions every change follows.
+OffMoney is a personal project, maintained by [@azevedo1z](https://github.com/azevedo1z). These are the conventions every change follows.
 
 ## Setup
 

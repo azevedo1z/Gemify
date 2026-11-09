@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/domain/reference_window.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/shared/reference_picker.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/domain/reference_window.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/shared/reference_picker.dart';
 
 final today = CalendarDate(2026, 11, 7);
 final openWindow = ReferenceWindow.after(null, today: today);

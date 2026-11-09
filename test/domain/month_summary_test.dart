@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/month_summary.dart';
+import 'package:offmoney/domain/month_summary.dart';
 
 import '../support/builders.dart';
 import '../support/sample_cycle.dart';

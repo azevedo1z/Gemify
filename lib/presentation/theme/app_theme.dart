@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/theme/metrics.dart';
+import 'package:offmoney/presentation/theme/metrics.dart';
 
 abstract final class AppTheme {
   static const _seed = Color(0xFF2A6E45);

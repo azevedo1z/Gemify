@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/expense_ordering.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_summary.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/shared/action_row.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
-import 'package:gemify/presentation/shared/grouped_section.dart';
-import 'package:gemify/presentation/shared/labels.dart';
-import 'package:gemify/presentation/shared/large_title.dart';
-import 'package:gemify/presentation/theme/metrics.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/expense_ordering.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_summary.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/shared/action_row.dart';
+import 'package:offmoney/presentation/shared/formatters.dart';
+import 'package:offmoney/presentation/shared/grouped_section.dart';
+import 'package:offmoney/presentation/shared/labels.dart';
+import 'package:offmoney/presentation/shared/large_title.dart';
+import 'package:offmoney/presentation/theme/metrics.dart';
 
 class MonthView extends StatelessWidget {
   const MonthView({

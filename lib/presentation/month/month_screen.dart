@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/rejections.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/presentation/backup/backup_actions.dart';
-import 'package:gemify/presentation/close_month/close_month_screen.dart';
-import 'package:gemify/presentation/expense_form/expense_form_screen.dart';
-import 'package:gemify/presentation/history/history_screen.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/month/income_dialog.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/shared/month_view.dart';
-import 'package:gemify/presentation/shared/reference_picker.dart';
-import 'package:gemify/presentation/shared/share_text.dart';
-import 'package:gemify/presentation/theme/theme_picker.dart';
+import 'package:offmoney/application/rejections.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/presentation/backup/backup_actions.dart';
+import 'package:offmoney/presentation/close_month/close_month_screen.dart';
+import 'package:offmoney/presentation/expense_form/expense_form_screen.dart';
+import 'package:offmoney/presentation/history/history_screen.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/month/income_dialog.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/shared/month_view.dart';
+import 'package:offmoney/presentation/shared/reference_picker.dart';
+import 'package:offmoney/presentation/shared/share_text.dart';
+import 'package:offmoney/presentation/theme/theme_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MonthScreen extends ConsumerWidget {

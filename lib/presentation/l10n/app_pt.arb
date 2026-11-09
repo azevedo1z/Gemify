@@ -1,6 +1,6 @@
 {
   "@@locale": "pt",
-  "appTitle": "Gemify",
+  "appTitle": "OffMoney",
   "monthJan": "jan",
   "monthFeb": "fev",
   "monthMar": "mar",
@@ -138,7 +138,7 @@
   "importInvalid": "Arquivo inválido: {reason}",
   "@importInvalid": {"placeholders": {"reason": {"type": "String"}}},
   "importReadFailed": "Não foi possível ler o arquivo.",
-  "importReasonFormat": "não é um backup do Gemify",
+  "importReasonFormat": "não é um backup do OffMoney",
   "importReasonVersion": "versão desconhecida",
   "importReasonStructure": "dados inválidos",
   "importReasonTimeline": "sequência de meses inválida",

@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/application/backup/expense_json.dart';
-import 'package:gemify/application/change_log_entry.dart';
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/expense.dart';
-import 'package:gemify/domain/expense_entry.dart';
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/income_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/month_timeline.dart';
-import 'package:gemify/domain/names.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/application/backup/expense_json.dart';
+import 'package:offmoney/application/change_log_entry.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/expense.dart';
+import 'package:offmoney/domain/expense_entry.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/income_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_timeline.dart';
+import 'package:offmoney/domain/names.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 enum BackupProblem {
-  notGemifyBackup,
+  notOffMoneyBackup,
   unknownVersion,
   invalidStructure,
   invalidTimeline,
@@ -65,7 +65,7 @@ abstract final class BackupCodec {
     try {
       final root = _Fields(jsonDecode(_withoutByteOrderMark(text)));
       if (root.optional<String>('format') != format) {
-        return const BackupRejected(BackupProblem.notGemifyBackup);
+        return const BackupRejected(BackupProblem.notOffMoneyBackup);
       }
       if (root.optional<int>('version') != version) {
         return const BackupRejected(BackupProblem.unknownVersion);

@@ -1,6 +1,6 @@
-import 'package:gemify/domain/calendar_date.dart';
-import 'package:gemify/domain/money.dart';
 import 'package:meta/meta.dart';
+import 'package:offmoney/domain/calendar_date.dart';
+import 'package:offmoney/domain/money.dart';
 
 enum ExpenseCategory { fixed, installment, variable }
 

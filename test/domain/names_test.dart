@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/domain/names.dart';
+import 'package:offmoney/domain/names.dart';
 
 void main() {
   group('Names.clean', () {

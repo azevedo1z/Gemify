@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
 
 Future<ThemeMode?> pickThemeMode(
   BuildContext context, {

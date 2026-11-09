@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gemify/domain/reference_month.dart';
-import 'package:gemify/domain/reference_window.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
+import 'package:offmoney/domain/reference_month.dart';
+import 'package:offmoney/domain/reference_window.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/shared/formatters.dart';
 
 Future<ReferenceMonth?> pickReference(
   BuildContext context, {

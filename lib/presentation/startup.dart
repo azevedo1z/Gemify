@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/clock.dart';
-import 'package:gemify/application/month_actions.dart';
-import 'package:gemify/application/month_repository.dart';
-import 'package:gemify/presentation/app.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/theme/app_theme.dart';
-import 'package:gemify/presentation/theme/theme_preference.dart';
+import 'package:offmoney/application/clock.dart';
+import 'package:offmoney/application/month_actions.dart';
+import 'package:offmoney/application/month_repository.dart';
+import 'package:offmoney/presentation/app.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/theme/app_theme.dart';
+import 'package:offmoney/presentation/theme/theme_preference.dart';
 
 Future<Widget> startApp({
   required MonthRepository Function() openRepository,
@@ -24,11 +24,11 @@ Future<Widget> startApp({
         themeModeStoreProvider.overrideWithValue(themeModeStore),
         clockProvider.overrideWithValue(clock),
       ],
-      child: const GemifyApp(),
+      child: const OffMoneyApp(),
     );
   } on Object catch (error, stack) {
     FlutterError.reportError(
-      FlutterErrorDetails(exception: error, stack: stack, library: 'gemify'),
+      FlutterErrorDetails(exception: error, stack: stack, library: 'offmoney'),
     );
     return const StartupFailedApp();
   }

@@ -1,4 +1,4 @@
-import 'package:gemify/domain/calendar_date.dart';
+import 'package:offmoney/domain/calendar_date.dart';
 
 typedef Clock = DateTime Function();
 

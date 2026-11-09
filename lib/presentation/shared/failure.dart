@@ -7,7 +7,7 @@ void reportFailure(
   StackTrace stack,
 ) {
   FlutterError.reportError(
-    FlutterErrorDetails(exception: error, stack: stack, library: 'gemify'),
+    FlutterErrorDetails(exception: error, stack: stack, library: 'offmoney'),
   );
   messenger.showSnackBar(SnackBar(content: Text(message)));
 }

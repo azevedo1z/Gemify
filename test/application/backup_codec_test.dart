@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gemify/application/backup/backup_actions.dart';
-import 'package:gemify/application/backup/backup_codec.dart';
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/application/change_log_entry.dart';
-import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/application/backup/backup_actions.dart';
+import 'package:offmoney/application/backup/backup_codec.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/application/change_log_entry.dart';
+import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/backup_fixture.dart';
 import '../support/builders.dart';
@@ -53,7 +53,7 @@ void main() {
     final cases =
         <String, (BackupProblem, void Function(Map<String, Object?>))>{
           'a file of another app': (
-            BackupProblem.notGemifyBackup,
+            BackupProblem.notOffMoneyBackup,
             (backup) => backup['format'] = 'other',
           ),
           'an unknown version': (
@@ -229,7 +229,7 @@ void main() {
     final original = await memory.repository.snapshot();
     final restored = (reading as BackupAccepted).snapshot;
     expect(_describe(restored), _describe(original));
-    expect(export.fileName(), 'gemify-backup-2026-11-07.json');
+    expect(export.fileName(), 'offmoney-backup-2026-11-07.json');
   });
 
   test('rejections describe themselves for diagnostics', () {

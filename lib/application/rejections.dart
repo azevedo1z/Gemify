@@ -1,6 +1,6 @@
-import 'package:gemify/domain/expense_rules.dart';
-import 'package:gemify/domain/money.dart';
-import 'package:gemify/domain/reference_month.dart';
+import 'package:offmoney/domain/expense_rules.dart';
+import 'package:offmoney/domain/money.dart';
+import 'package:offmoney/domain/reference_month.dart';
 
 final class InvalidExpenseException implements Exception {
   const InvalidExpenseException(this.errors);

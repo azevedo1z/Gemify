@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gemify/application/backup/backup_codec.dart';
-import 'package:gemify/application/backup/backup_snapshot.dart';
-import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
-import 'package:gemify/presentation/providers.dart';
-import 'package:gemify/presentation/shared/confirm_dialog.dart';
-import 'package:gemify/presentation/shared/failure.dart';
-import 'package:gemify/presentation/shared/formatters.dart';
+import 'package:offmoney/application/backup/backup_codec.dart';
+import 'package:offmoney/application/backup/backup_snapshot.dart';
+import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
+import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/shared/confirm_dialog.dart';
+import 'package:offmoney/presentation/shared/failure.dart';
+import 'package:offmoney/presentation/shared/formatters.dart';
 
 Future<void> exportBackup(BuildContext context, WidgetRef ref) async {
   final l10n = AppLocalizations.of(context);
@@ -73,7 +73,7 @@ Future<bool> _confirmReplace(BuildContext context, BackupSnapshot snapshot) {
 
 String _reason(BackupProblem problem, AppLocalizations l10n) =>
     switch (problem) {
-      BackupProblem.notGemifyBackup => l10n.importReasonFormat,
+      BackupProblem.notOffMoneyBackup => l10n.importReasonFormat,
       BackupProblem.unknownVersion => l10n.importReasonVersion,
       BackupProblem.invalidStructure => l10n.importReasonStructure,
       BackupProblem.invalidTimeline => l10n.importReasonTimeline,
