@@ -2,10 +2,93 @@ import 'package:flutter/material.dart';
 import 'package:offmoney/presentation/theme/metrics.dart';
 
 abstract final class AppTheme {
-  static const _seed = Color(0xFF2A6E45);
+  static const displayFontFamily = 'BarlowCondensed';
+
+  static const _black = Color(0xFF000000);
+  static const _white = Color(0xFFFFFFFF);
+  static const _brandRed = Color(0xFFD52822);
+  static const _brandRedOnDark = Color(0xFFFF4F47);
+  static const _outlineWidth = 1.5;
+
+  static const _lightScheme = ColorScheme(
+    brightness: Brightness.light,
+    primary: _brandRed,
+    onPrimary: _white,
+    primaryContainer: Color(0xFFFFDAD6),
+    onPrimaryContainer: Color(0xFF410002),
+    secondary: _black,
+    onSecondary: _white,
+    secondaryContainer: _black,
+    onSecondaryContainer: _white,
+    tertiary: _black,
+    onTertiary: _white,
+    error: Color(0xFF9E1A15),
+    onError: _white,
+    errorContainer: Color(0xFFFFDAD6),
+    onErrorContainer: Color(0xFF410002),
+    surface: _white,
+    onSurface: _black,
+    onSurfaceVariant: Color(0xFF5C5C5C),
+    surfaceDim: Color(0xFFDEDEDE),
+    surfaceBright: _white,
+    surfaceContainerLowest: _white,
+    surfaceContainerLow: Color(0xFFF7F7F7),
+    surfaceContainer: Color(0xFFF2F2F2),
+    surfaceContainerHigh: Color(0xFFEBEBEB),
+    surfaceContainerHighest: Color(0xFFE3E3E3),
+    outline: Color(0xFF767676),
+    outlineVariant: Color(0xFFD9D9D9),
+    shadow: _black,
+    scrim: _black,
+    inverseSurface: _black,
+    onInverseSurface: _white,
+    inversePrimary: _brandRedOnDark,
+    surfaceTint: Colors.transparent,
+  );
+
+  static const _darkScheme = ColorScheme(
+    brightness: Brightness.dark,
+    primary: _brandRedOnDark,
+    onPrimary: _black,
+    primaryContainer: Color(0xFF5C0F0C),
+    onPrimaryContainer: Color(0xFFFFDAD6),
+    secondary: _white,
+    onSecondary: _black,
+    secondaryContainer: _white,
+    onSecondaryContainer: _black,
+    tertiary: _white,
+    onTertiary: _black,
+    error: Color(0xFFFFB0A8),
+    onError: _black,
+    errorContainer: Color(0xFF93000A),
+    onErrorContainer: Color(0xFFFFDAD6),
+    surface: _black,
+    onSurface: _white,
+    onSurfaceVariant: Color(0xFFA6A6A6),
+    surfaceDim: _black,
+    surfaceBright: Color(0xFF2E2E2E),
+    surfaceContainerLowest: _black,
+    surfaceContainerLow: Color(0xFF0E0E0E),
+    surfaceContainer: Color(0xFF141414),
+    surfaceContainerHigh: Color(0xFF1C1C1C),
+    surfaceContainerHighest: Color(0xFF262626),
+    outline: Color(0xFF8C8C8C),
+    outlineVariant: Color(0xFF333333),
+    shadow: _black,
+    scrim: _black,
+    inverseSurface: _white,
+    onInverseSurface: _black,
+    inversePrimary: _brandRed,
+    surfaceTint: Colors.transparent,
+  );
 
   static const _tabular = TextStyle(
     fontFeatures: [FontFeature.tabularFigures()],
+  );
+
+  static const _display = TextStyle(
+    fontFamily: displayFontFamily,
+    fontWeight: FontWeight.w900,
   );
 
   static const _textTheme = TextTheme(
@@ -13,7 +96,6 @@ abstract final class AppTheme {
     displayMedium: _tabular,
     displaySmall: _tabular,
     headlineLarge: TextStyle(
-      fontWeight: FontWeight.w700,
       letterSpacing: -0.5,
       fontFeatures: [FontFeature.tabularFigures()],
     ),
@@ -33,21 +115,18 @@ abstract final class AppTheme {
     labelSmall: _tabular,
   );
 
-  static final ThemeData light = _build(Brightness.light);
+  static final ThemeData light = _build(_lightScheme);
 
-  static final ThemeData dark = _build(Brightness.dark);
+  static final ThemeData dark = _build(_darkScheme);
 
   static ButtonStyle destructive(ColorScheme scheme) => FilledButton.styleFrom(
-    backgroundColor: scheme.error,
-    foregroundColor: scheme.onError,
+    backgroundColor: Colors.transparent,
+    foregroundColor: scheme.error,
+    side: BorderSide(color: scheme.error, width: _outlineWidth),
   );
 
-  static ThemeData _build(Brightness brightness) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: _seed,
-      brightness: brightness,
-    );
-    final isLight = brightness == Brightness.light;
+  static ThemeData _build(ColorScheme scheme) {
+    final isLight = scheme.brightness == Brightness.light;
     final background = isLight
         ? scheme.surfaceContainer
         : scheme.surfaceContainerLowest;
@@ -60,7 +139,11 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: background,
       splashFactory: NoSplash.splashFactory,
     );
-    final text = base.textTheme;
+    final readable = base.textTheme;
+    final text = readable.copyWith(
+      headlineLarge: readable.headlineLarge?.merge(_display),
+      headlineSmall: readable.headlineSmall?.merge(_display),
+    );
     const rounded = RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(Metrics.radius)),
     );
@@ -70,6 +153,7 @@ abstract final class AppTheme {
       width: Metrics.hairline,
     );
     return base.copyWith(
+      textTheme: text,
       appBarTheme: AppBarTheme(
         backgroundColor: background,
         foregroundColor: scheme.onSurface,
@@ -140,11 +224,18 @@ abstract final class AppTheme {
         backgroundColor: cell,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(Metrics.dialogRadius),
-          ),
+        titleTextStyle: readable.headlineSmall?.copyWith(
+          color: scheme.onSurface,
         ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(Metrics.dialogRadius)),
+        ),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: cell,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        headerHeadlineStyle: readable.headlineLarge,
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: cell,

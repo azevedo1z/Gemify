@@ -177,7 +177,6 @@ class AuditBar extends StatelessWidget {
                           formatMoney(balance),
                           key: const Key('balance'),
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
                             color: negative ? scheme.error : scheme.onSurface,
                           ),
                         ),
