@@ -225,27 +225,60 @@ void main() {
     expect(find.text('Gasto fixo'), findsNothing);
   }, seed: seedSampleMonth);
 
-  testApp('changes the reference of the open month', (app) async {
-    await app.tap(find.text('nov/2026'));
-    expect(find.text('Mês de referência'), findsOneWidget);
-    await app.tap(find.text('dez/2026'));
+  Future<void> openReferencePicker(AppHarness app) async {
+    await app.tap(find.byIcon(Icons.more_horiz_rounded));
+    await app.tap(find.text('Alterar mês de referência'));
+  }
+
+  Finder referenceChip(String label) => find.widgetWithText(ChoiceChip, label);
+
+  testApp('changes the reference of the open month from the menu', (
+    app,
+  ) async {
+    await openReferencePicker(app);
+    expect(
+      find.text(
+        'Os lançamentos continuam os mesmos; só muda o nome do mês aberto.',
+      ),
+      findsOneWidget,
+    );
+    await app.tap(referenceChip('dez/2026'));
+    await app.tap(find.text('Salvar'));
 
     expect(find.text('dez/2026'), findsOneWidget);
     expect(find.text('nov/2026'), findsNothing);
+    expect(
+      find.text('Mês de referência alterado para dez/2026'),
+      findsOneWidget,
+    );
     final month = await app.wait(app.memory.repository.openMonth());
     expect(month.reference, ReferenceMonth(2026, 12));
   });
 
-  testApp('the reference cannot go back to a closed month', (app) async {
-    await app.tap(find.text('dez/2026'));
+  testApp('tapping the month title does not open the reference picker', (
+    app,
+  ) async {
     await app.tap(find.text('nov/2026'));
 
-    expect(
-      find.text('Escolha um mês após o último fechado'),
-      findsOneWidget,
-    );
-    expect(find.text('dez/2026'), findsOneWidget);
+    expect(find.byType(ChoiceChip), findsNothing);
+  });
+
+  testApp('the reference picker hides closed months', (app) async {
+    await openReferencePicker(app);
+
+    expect(referenceChip('nov/2026'), findsNothing);
+    expect(referenceChip('dez/2026'), findsOneWidget);
   }, seed: closeNovember);
+
+  testApp('a month closed while picking cannot be chosen', (app) async {
+    await openReferencePicker(app);
+    await app.tap(referenceChip('out/2026'));
+    await app.wait(closeNovember(app.memory));
+    await app.tap(find.text('Salvar'));
+
+    expect(find.text('Esse mês não pode ser escolhido'), findsOneWidget);
+    expect(find.text('dez/2026'), findsOneWidget);
+  });
 
   testApp('the audit line stays in view while the list scrolls', (app) async {
     await app.usePhoneScreen();

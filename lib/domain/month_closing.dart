@@ -7,12 +7,14 @@ import 'package:gemify/domain/money.dart';
 import 'package:gemify/domain/month.dart';
 import 'package:gemify/domain/month_summary.dart';
 import 'package:gemify/domain/reference_month.dart';
+import 'package:gemify/domain/reference_window.dart';
 
 enum CloseError {
   monthNotOpen,
   incomeMissing,
   invalidExpenses,
   referenceNotAfterClosing,
+  referenceTooFarAhead,
   newIncomeOutOfRange,
 }
 
@@ -87,12 +89,14 @@ abstract final class MonthClosing {
   }) {
     final invalidEntries = _invalidEntries(month, today);
     final income = month.income;
+    final window = ReferenceWindow.after(month.reference, today: today);
     final errors = {
       if (!month.isOpen) CloseError.monthNotOpen,
       if (income == null) CloseError.incomeMissing,
       if (invalidEntries.isNotEmpty) CloseError.invalidExpenses,
-      if (!newReference.isAfter(month.reference))
+      if (window.first.isAfter(newReference))
         CloseError.referenceNotAfterClosing,
+      if (newReference.isAfter(window.last)) CloseError.referenceTooFarAhead,
       if (newIncome != null && !IncomeRules.accepts(newIncome))
         CloseError.newIncomeOutOfRange,
     };

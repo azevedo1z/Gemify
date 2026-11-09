@@ -26,5 +26,5 @@ final class InvalidReferenceException implements Exception {
   final ReferenceMonth reference;
 
   @override
-  String toString() => 'Reference $reference is not after the latest close';
+  String toString() => 'Reference $reference is outside the allowed window';
 }

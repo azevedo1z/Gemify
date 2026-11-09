@@ -63,7 +63,10 @@ final Provider<DeleteExpense> deleteExpenseProvider = Provider(
 );
 
 final Provider<ChangeOpenReference> changeOpenReferenceProvider = Provider(
-  (ref) => ChangeOpenReference(ref.watch(monthRepositoryProvider)),
+  (ref) => ChangeOpenReference(
+    ref.watch(monthRepositoryProvider),
+    ref.watch(clockProvider),
+  ),
 );
 
 final Provider<PrepareClose> prepareCloseProvider = Provider(

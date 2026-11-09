@@ -33,9 +33,12 @@ final class ReferenceMonth implements Comparable<ReferenceMonth> {
   String get iso =>
       '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}';
 
-  ReferenceMonth next() => month == monthsInYear
-      ? ReferenceMonth(year + 1, 1)
-      : ReferenceMonth(year, month + 1);
+  ReferenceMonth next() => plusMonths(1);
+
+  ReferenceMonth plusMonths(int months) {
+    final ordinal = _ordinal + months;
+    return ReferenceMonth(ordinal ~/ monthsInYear, ordinal % monthsInYear + 1);
+  }
 
   bool isAfter(ReferenceMonth other) => compareTo(other) > 0;
 

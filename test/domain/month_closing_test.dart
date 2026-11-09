@@ -170,6 +170,20 @@ void main() {
       }
     });
 
+    test('rejects a new reference more than three months past today', () {
+      expect(
+        rejectionOf(
+          MonthClosing.plan(
+            month: openMonth(reference: november, income: brl('1,00')),
+            newReference: ReferenceMonth(2027, 3),
+            newIncome: null,
+            today: defaultToday,
+          ),
+        ).errors,
+        {CloseError.referenceTooFarAhead},
+      );
+    });
+
     test('accepts skipping months', () {
       final plan = planOf(
         MonthClosing.plan(

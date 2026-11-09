@@ -174,12 +174,38 @@ void main() {
       await ConfirmClose(memory.repository)((outcome as ClosePlanned).plan);
     }
 
-    test('accepts any month while nothing was closed', () async {
-      await ChangeOpenReference(memory.repository)(ReferenceMonth(2020, 1));
+    ChangeOpenReference changeReference() =>
+        ChangeOpenReference(memory.repository, memory.clock.call);
+
+    test('offers the window around today while nothing was closed', () async {
+      final window = await changeReference().window();
+
+      expect(window.first, ReferenceMonth(2025, 11));
+      expect(window.last, ReferenceMonth(2027, 2));
+    });
+
+    test('accepts a past month while nothing was closed', () async {
+      await changeReference()(ReferenceMonth(2025, 11));
 
       expect(
         (await memory.repository.openMonth()).reference,
-        ReferenceMonth(2020, 1),
+        ReferenceMonth(2025, 11),
+      );
+    });
+
+    test('rejects a month outside the window', () async {
+      for (final reference in [
+        ReferenceMonth(2025, 10),
+        ReferenceMonth(2027, 3),
+      ]) {
+        await expectLater(
+          changeReference()(reference),
+          throwsA(isA<InvalidReferenceException>()),
+        );
+      }
+      expect(
+        (await memory.repository.openMonth()).reference,
+        ReferenceMonth(2026, 11),
       );
     });
 
@@ -187,10 +213,10 @@ void main() {
       await closeNovember();
 
       await expectLater(
-        ChangeOpenReference(memory.repository)(ReferenceMonth(2026, 11)),
+        changeReference()(ReferenceMonth(2026, 11)),
         throwsA(isA<InvalidReferenceException>()),
       );
-      await ChangeOpenReference(memory.repository)(ReferenceMonth(2027, 1));
+      await changeReference()(ReferenceMonth(2027, 1));
       expect(
         (await memory.repository.openMonth()).reference,
         ReferenceMonth(2027, 1),
@@ -213,6 +239,15 @@ void main() {
       expect(plan.incomeKept, isTrue);
     },
   );
+
+  test('PrepareClose offers the months after the closing one', () async {
+    final window = PrepareClose(memory.clock.call).window(
+      await memory.repository.openMonth(),
+    );
+
+    expect(window.first, ReferenceMonth(2026, 12));
+    expect(window.last, ReferenceMonth(2027, 2));
+  });
 
   test('rejections describe themselves for diagnostics', () {
     expect(

@@ -6,44 +6,6 @@ import 'package:gemify/domain/reference_month.dart';
 import '../support/builders.dart';
 
 void main() {
-  group('MonthTimeline.acceptsOpenReference', () {
-    test('any reference when no month was closed yet', () {
-      expect(
-        MonthTimeline.acceptsOpenReference(
-          ReferenceMonth(2020, 1),
-          latestClosed: null,
-        ),
-        isTrue,
-      );
-    });
-
-    test('only references after the latest closed month', () {
-      final latestClosed = ReferenceMonth(2026, 10);
-
-      expect(
-        MonthTimeline.acceptsOpenReference(
-          ReferenceMonth(2026, 11),
-          latestClosed: latestClosed,
-        ),
-        isTrue,
-      );
-      expect(
-        MonthTimeline.acceptsOpenReference(
-          ReferenceMonth(2026, 10),
-          latestClosed: latestClosed,
-        ),
-        isFalse,
-      );
-      expect(
-        MonthTimeline.acceptsOpenReference(
-          ReferenceMonth(2026, 9),
-          latestClosed: latestClosed,
-        ),
-        isFalse,
-      );
-    });
-  });
-
   group('MonthTimeline.errors', () {
     test('accepts closed months followed by the open one, in any order', () {
       expect(

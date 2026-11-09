@@ -16,6 +16,16 @@ void main() {
       expect(ReferenceMonth(2026, 12).next(), ReferenceMonth(2027, 1));
     });
 
+    test('moves by any number of months across years', () {
+      expect(ReferenceMonth(2026, 11).plusMonths(3), ReferenceMonth(2027, 2));
+      expect(
+        ReferenceMonth(2026, 11).plusMonths(-12),
+        ReferenceMonth(2025, 11),
+      );
+      expect(ReferenceMonth(2026, 1).plusMonths(-1), ReferenceMonth(2025, 12));
+      expect(ReferenceMonth(2026, 5).plusMonths(0), ReferenceMonth(2026, 5));
+    });
+
     test('is the month that contains a date', () {
       expect(
         ReferenceMonth.containing(CalendarDate(2026, 11, 7)),

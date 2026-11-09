@@ -10,6 +10,7 @@ import 'package:gemify/presentation/history/history_screen.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/month/income_dialog.dart';
 import 'package:gemify/presentation/providers.dart';
+import 'package:gemify/presentation/shared/formatters.dart';
 import 'package:gemify/presentation/shared/month_view.dart';
 import 'package:gemify/presentation/shared/reference_picker.dart';
 import 'package:gemify/presentation/shared/share_text.dart';
@@ -30,7 +31,7 @@ class MonthScreen extends ConsumerWidget {
       };
 }
 
-enum _MenuAction { exportBackup, importBackup, theme, about }
+enum _MenuAction { changeReference, exportBackup, importBackup, theme, about }
 
 class _OpenMonthPage extends ConsumerWidget {
   const _OpenMonthPage({required this.month});
@@ -60,6 +61,7 @@ class _OpenMonthPage extends ConsumerWidget {
           PopupMenuButton<_MenuAction>(
             icon: const Icon(Icons.more_horiz_rounded),
             onSelected: (action) => switch (action) {
+              _MenuAction.changeReference => _changeReference(context, ref),
               _MenuAction.exportBackup => exportBackup(context, ref),
               _MenuAction.importBackup => importBackup(context, ref),
               _MenuAction.theme => _pickTheme(context, ref),
@@ -70,6 +72,10 @@ class _OpenMonthPage extends ConsumerWidget {
               ),
             },
             itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _MenuAction.changeReference,
+                child: Text(l10n.changeReference),
+              ),
               PopupMenuItem(
                 value: _MenuAction.exportBackup,
                 child: Text(l10n.exportBackup),
@@ -92,7 +98,6 @@ class _OpenMonthPage extends ConsumerWidget {
       ),
       body: MonthView(
         month: month,
-        onEditReference: () => _editReference(context, ref),
         onEditIncome: () => editIncome(context, current: month.income),
         onAdd: (category) => openExpenseForm(context, category),
         onEdit: (entry) =>
@@ -119,16 +124,31 @@ class _OpenMonthPage extends ConsumerWidget {
     await ref.read(themeModeProvider.notifier).select(picked);
   }
 
-  Future<void> _editReference(BuildContext context, WidgetRef ref) async {
+  Future<void> _changeReference(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    final picked = await pickReference(context, initial: month.reference);
+    final changeReference = ref.read(changeOpenReferenceProvider);
+    final window = await changeReference.window();
+    if (!context.mounted) return;
+    final picked = await pickReference(
+      context,
+      title: l10n.changeReference,
+      note: l10n.changeReferenceNote,
+      confirmLabel: l10n.save,
+      initial: month.reference,
+      window: window,
+    );
     if (picked == null || picked == month.reference) return;
     try {
-      await ref.read(changeOpenReferenceProvider).call(picked);
+      await changeReference(picked);
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.referenceChanged(formatReference(picked, l10n))),
+        ),
+      );
     } on InvalidReferenceException {
       messenger.showSnackBar(
-        SnackBar(content: Text(l10n.referenceMustBeAfterClosed)),
+        SnackBar(content: Text(l10n.referenceUnavailable)),
       );
     }
   }

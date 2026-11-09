@@ -8,8 +8,8 @@ import 'package:gemify/domain/income_rules.dart';
 import 'package:gemify/domain/money.dart';
 import 'package:gemify/domain/month.dart';
 import 'package:gemify/domain/month_closing.dart';
-import 'package:gemify/domain/month_timeline.dart';
 import 'package:gemify/domain/reference_month.dart';
+import 'package:gemify/domain/reference_window.dart';
 
 final class StartMonth {
   const StartMonth(this._repository, this._clock);
@@ -111,16 +111,18 @@ final class DeleteExpense {
 }
 
 final class ChangeOpenReference {
-  const ChangeOpenReference(this._repository);
+  const ChangeOpenReference(this._repository, this._clock);
 
   final MonthRepository _repository;
+  final Clock _clock;
+
+  Future<ReferenceWindow> window() async => ReferenceWindow.after(
+    await _repository.latestClosedReference(),
+    today: todayFrom(_clock),
+  );
 
   Future<void> call(ReferenceMonth reference) async {
-    final latestClosed = await _repository.latestClosedReference();
-    if (!MonthTimeline.acceptsOpenReference(
-      reference,
-      latestClosed: latestClosed,
-    )) {
+    if (!(await window()).contains(reference)) {
       throw InvalidReferenceException(reference);
     }
     await _repository.setOpenReference(reference);
@@ -131,6 +133,9 @@ final class PrepareClose {
   const PrepareClose(this._clock);
 
   final Clock _clock;
+
+  ReferenceWindow window(Month month) =>
+      ReferenceWindow.after(month.reference, today: todayFrom(_clock));
 
   CloseOutcome call(
     Month month, {

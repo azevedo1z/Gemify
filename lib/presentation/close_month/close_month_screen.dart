@@ -51,9 +51,13 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
   );
 
   Future<void> _pickReference(Month month) async {
+    final l10n = AppLocalizations.of(context);
     final picked = await pickReference(
       context,
+      title: l10n.nextReference,
+      confirmLabel: l10n.choose,
       initial: _newReference ?? month.reference.next(),
+      window: ref.read(prepareCloseProvider).window(month),
     );
     if (picked != null && mounted) setState(() => _newReference = picked);
   }
@@ -163,7 +167,6 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
       ClosePlanned() => const <CloseError>{},
     };
     final newReference = _newReference ?? month.reference.next();
-    final closingLabel = formatReference(month.reference, l10n);
     final keptIncome = month.income ?? Money.zero;
     return ListView(
       padding: const EdgeInsets.only(top: Metrics.inset),
@@ -182,12 +185,6 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
             ListTile(
               enabled: !_closing,
               title: Text(l10n.referenceLabel),
-              subtitle: errors.contains(CloseError.referenceNotAfterClosing)
-                  ? Text(
-                      l10n.closeReferenceMustBeAfter(closingLabel),
-                      style: TextStyle(color: scheme.error),
-                    )
-                  : null,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

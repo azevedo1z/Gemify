@@ -15,7 +15,6 @@ import 'package:gemify/presentation/theme/metrics.dart';
 class MonthView extends StatelessWidget {
   const MonthView({
     required this.month,
-    this.onEditReference,
     this.onEditIncome,
     this.onAdd,
     this.onEdit,
@@ -24,7 +23,6 @@ class MonthView extends StatelessWidget {
   });
 
   final Month month;
-  final VoidCallback? onEditReference;
   final VoidCallback? onEditIncome;
   final ValueChanged<ExpenseCategory>? onAdd;
   final ValueChanged<ExpenseEntry>? onEdit;
@@ -44,11 +42,7 @@ class MonthView extends StatelessWidget {
         bottom: Metrics.floatingButtonClearance,
       ),
       children: [
-        LargeTitle(
-          text: formatReference(month.reference, l10n),
-          tooltip: l10n.referenceDialogTitle,
-          onTap: onEditReference,
-        ),
+        LargeTitle(text: formatReference(month.reference, l10n)),
         GroupedSection(
           children: [_IncomeTile(income: month.income, onTap: onEditIncome)],
         ),

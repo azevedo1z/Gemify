@@ -1,5 +1,4 @@
 import 'package:gemify/domain/month.dart';
-import 'package:gemify/domain/reference_month.dart';
 
 enum TimelineError {
   noOpenMonth,
@@ -12,11 +11,6 @@ enum TimelineError {
 }
 
 abstract final class MonthTimeline {
-  static bool acceptsOpenReference(
-    ReferenceMonth reference, {
-    required ReferenceMonth? latestClosed,
-  }) => latestClosed == null || reference.isAfter(latestClosed);
-
   static Set<TimelineError> errors(Iterable<Month> months) {
     final chronological = [...months]
       ..sort((a, b) => a.reference.compareTo(b.reference));

@@ -1,69 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:gemify/domain/reference_month.dart';
+import 'package:gemify/domain/reference_window.dart';
 import 'package:gemify/presentation/l10n/generated/app_localizations.dart';
 import 'package:gemify/presentation/shared/formatters.dart';
+import 'package:gemify/presentation/theme/metrics.dart';
 
 Future<ReferenceMonth?> pickReference(
   BuildContext context, {
+  required String title,
+  required String confirmLabel,
   required ReferenceMonth initial,
+  required ReferenceWindow window,
+  String? note,
 }) => showDialog<ReferenceMonth>(
   context: context,
-  builder: (_) => _ReferencePicker(initial: initial),
+  builder: (_) => _ReferencePicker(
+    title: title,
+    confirmLabel: confirmLabel,
+    initial: initial,
+    window: window,
+    note: note,
+  ),
 );
 
 class _ReferencePicker extends StatefulWidget {
-  const _ReferencePicker({required this.initial});
+  const _ReferencePicker({
+    required this.title,
+    required this.confirmLabel,
+    required this.initial,
+    required this.window,
+    required this.note,
+  });
 
+  final String title;
+  final String confirmLabel;
   final ReferenceMonth initial;
+  final ReferenceWindow window;
+  final String? note;
 
   @override
   State<_ReferencePicker> createState() => _ReferencePickerState();
 }
 
 class _ReferencePickerState extends State<_ReferencePicker> {
-  late int _year = widget.initial.year;
+  late int _year = widget.initial.year.clamp(_firstYear, _lastYear);
+  late ReferenceMonth? _selected = widget.window.contains(widget.initial)
+      ? widget.initial
+      : null;
+
+  int get _firstYear => widget.window.first.year;
+  int get _lastYear => widget.window.last.year;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final note = widget.note;
+    final selected = _selected;
     return AlertDialog(
-      title: Text(l10n.referenceDialogTitle),
+      title: Text(widget.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                tooltip: l10n.previousYear,
-                onPressed: _year > ReferenceMonth.firstYear
-                    ? () => setState(() => _year--)
-                    : null,
-                icon: const Icon(Icons.chevron_left),
+          if (note != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Metrics.inset),
+              child: Text(
+                note,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-              Text('$_year', style: Theme.of(context).textTheme.titleLarge),
-              IconButton(
-                tooltip: l10n.nextYear,
-                onPressed: _year < ReferenceMonth.lastYear
-                    ? () => setState(() => _year++)
-                    : null,
-                icon: const Icon(Icons.chevron_right),
-              ),
-            ],
-          ),
+            ),
+          if (_firstYear != _lastYear)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  tooltip: l10n.previousYear,
+                  onPressed: _year > _firstYear
+                      ? () => setState(() => _year--)
+                      : null,
+                  icon: const Icon(Icons.chevron_left),
+                ),
+                Text('$_year', style: theme.textTheme.titleLarge),
+                IconButton(
+                  tooltip: l10n.nextYear,
+                  onPressed: _year < _lastYear
+                      ? () => setState(() => _year++)
+                      : null,
+                  icon: const Icon(Icons.chevron_right),
+                ),
+              ],
+            ),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (var month = 1; month <= ReferenceMonth.monthsInYear; month++)
+              for (final reference in _monthsOfYear())
                 ChoiceChip(
-                  label: Text(
-                    formatReference(ReferenceMonth(_year, month), l10n),
-                  ),
-                  selected: ReferenceMonth(_year, month) == widget.initial,
-                  onSelected: (_) => Navigator.of(
-                    context,
-                  ).pop(ReferenceMonth(_year, month)),
+                  label: Text(formatReference(reference, l10n)),
+                  selected: reference == selected,
+                  onSelected: (_) => setState(() => _selected = reference),
                 ),
             ],
           ),
@@ -74,7 +113,20 @@ class _ReferencePickerState extends State<_ReferencePicker> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l10n.cancel),
         ),
+        TextButton(
+          onPressed: selected == null
+              ? null
+              : () => Navigator.of(context).pop(selected),
+          child: Text(widget.confirmLabel),
+        ),
       ],
     );
+  }
+
+  Iterable<ReferenceMonth> _monthsOfYear() sync* {
+    for (var month = 1; month <= ReferenceMonth.monthsInYear; month++) {
+      final reference = ReferenceMonth(_year, month);
+      if (widget.window.contains(reference)) yield reference;
+    }
   }
 }
