@@ -8,7 +8,7 @@ import '../support/app_harness.dart';
 import '../support/app_seeds.dart';
 import '../support/builders.dart';
 
-final Finder saveButton = button('Salvar');
+final Finder saveButton = textButton('Salvar');
 const duplicateWarning = 'Possível duplicata';
 
 Future<void> newFixed(AppHarness app, String name, String digits) async {
@@ -75,7 +75,7 @@ void main() {
       expect(find.text('Supermercado'), findsOneWidget);
 
       await app.tap(find.text('Supermercado'));
-      await app.tap(find.byTooltip('Excluir'));
+      await app.tap(find.text('Excluir'));
       expect(find.text('Excluir gasto?'), findsOneWidget);
       await app.tap(find.text('Excluir').last);
 

@@ -25,7 +25,6 @@ Future<PickerResult> openPicker(
   WidgetTester tester, {
   required ReferenceMonth initial,
   required ReferenceWindow window,
-  String? note,
 }) async {
   final result = PickerResult();
   await tester.pumpWidget(
@@ -40,7 +39,6 @@ Future<PickerResult> openPicker(
             confirmLabel: 'Salvar',
             initial: initial,
             window: window,
-            note: note,
           ),
           child: const Text('open'),
         ),
@@ -103,17 +101,6 @@ void main() {
 
     expect(find.text('Título'), findsNothing);
     expect(result.picked, isNull);
-  });
-
-  testWidgets('shows the note that explains the change', (tester) async {
-    await openPicker(
-      tester,
-      initial: ReferenceMonth(2026, 11),
-      window: windowAfterOctober,
-      note: 'Nota',
-    );
-
-    expect(find.text('Nota'), findsOneWidget);
   });
 
   testWidgets('offers only the months inside the window', (tester) async {

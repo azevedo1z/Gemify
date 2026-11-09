@@ -39,18 +39,19 @@ class GroupedSection extends StatelessWidget {
                 child: header,
               ),
             ),
-          Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final (index, child) in children.indexed) ...[
-                  if (index > 0) const Divider(indent: Metrics.inset),
-                  child,
+          if (children.isNotEmpty)
+            Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final (index, child) in children.indexed) ...[
+                    if (index > 0) const Divider(indent: Metrics.inset),
+                    child,
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
           if (footer != null)
             Padding(
               padding: _labelInsets.copyWith(top: Metrics.headerGap),

@@ -80,7 +80,6 @@ class _IncomeDialogState extends ConsumerState<_IncomeDialog> {
           color: Theme.of(context).scaffoldBackgroundColor,
           child: MoneyField(
             controller: _controller,
-            label: l10n.amountLabel,
             errorText: _error,
             autofocus: true,
           ),

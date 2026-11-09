@@ -4,7 +4,7 @@ import 'package:gemify/presentation/shared/money_input.dart';
 class MoneyField extends StatelessWidget {
   const MoneyField({
     required this.controller,
-    required this.label,
+    this.label,
     this.hint,
     this.errorText,
     this.onChanged,
@@ -14,7 +14,7 @@ class MoneyField extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final String label;
+  final String? label;
   final String? hint;
   final String? errorText;
   final ValueChanged<String>? onChanged;

@@ -10,7 +10,7 @@ final Finder saveButton = button('Salvar');
 void main() {
   testApp('back and taps outside are ignored while saving', (app) async {
     await app.tap(incomeTile);
-    await app.enter(field('Valor'), '480000');
+    await app.enter(dialogField, '480000');
     app.repository.holdWrites();
     await app.tap(saveButton);
 
@@ -27,7 +27,7 @@ void main() {
   testApp('a failed save says so and allows another try', (app) async {
     await app.tap(incomeTile);
     await app.wait(app.memory.database.delete(app.memory.database.months).go());
-    await app.enter(field('Valor'), '480000');
+    await app.enter(dialogField, '480000');
 
     await app.tap(saveButton);
 
