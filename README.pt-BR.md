@@ -1,7 +1,8 @@
 <h1 align="center">
-  <img src="assets/icon/gemify-icon.png" width="96" alt="Gemify">
-  <br>
-  Gemify
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/offmoney-logo-dark.png">
+    <img src="assets/brand/offmoney-logo.png" width="320" alt="OffMoney">
+  </picture>
 </h1>
 
 <p align="center">
@@ -25,11 +26,11 @@
 ---
 
 > [!NOTE]
-> O Gemify é uma ferramenta de controle pessoal, não consultoria financeira. Confira seus valores e decisões; o software não tem garantia (veja a [licença](LICENSE)).
+> O OffMoney é uma ferramenta de controle pessoal, não consultoria financeira. Confira seus valores e decisões; o software não tem garantia (veja a [licença](LICENSE)).
 
 ## Sumário
 
-- [Por que o Gemify](#por-que-o-gemify)
+- [Por que o OffMoney](#por-que-o-offmoney)
 - [Funcionalidades](#funcionalidades)
 - [Como funciona](#como-funciona)
 - [Primeiros passos](#primeiros-passos)
@@ -42,11 +43,13 @@
 - [Privacidade](#privacidade)
 - [Licença](#licença)
 
-## Por que o Gemify
+## Por que o OffMoney
 
-O Gemify substitui uma "Gem" do Gemini que controlava o orçamento do mês por mensagens. A Gem funcionava, mas cada resposta dependia de um modelo de linguagem acertar as contas e as regras, e o histórico ficava preso numa conversa.
+O OffMoney é um orçamento mensal que fica fora da rede. Não tem conta, nem conexão com banco, nem nuvem, nem IA: você digita o que entra e o que sai, e o app faz as contas sempre do mesmo jeito.
 
-O Gemify mantém as mesmas regras e as torna determinísticas: valores em centavos inteiros, cada regra com uma única implementação testada, toda alteração registrada e os dados no próprio celular.
+- **Exato.** Valores em centavos inteiros, cada regra com uma única implementação testada, e todo total recalculado a partir dos itens.
+- **Auditável.** O saldo sempre mostra a conta inteira, e toda alteração fica registrada com o valor antigo e o novo.
+- **Privado.** Os builds de release não têm permissão de internet; seus dados só saem do celular quando você exporta um backup.
 
 ## Funcionalidades
 
@@ -55,7 +58,7 @@ O Gemify mantém as mesmas regras e as torna determinísticas: valores em centav
 - **Fechamento com prévia.** Antes de fechar, o app mostra cada efeito: gastos variáveis zerados, parcelas que avançam ou terminam, gastos fixos mantidos, o saldo final e a entrada do mês seguinte.
 - **Digitação cuidadosa.** Campo de moeda preenchido da direita, com estado vazio diferente de R$ 0,00; confirmação quando um gasto passa do saldo restante, quando parece duplicado e antes de excluir.
 - **Histórico.** Meses fechados ficam somente leitura, com a própria linha de auditoria.
-- **Compartilhar.** Um resumo em texto de qualquer mês, no formato da Gem, pela folha de compartilhamento do Android.
+- **Compartilhar.** Um resumo em texto de qualquer mês pela folha de compartilhamento do Android.
 - **Backup.** Exportação em JSON versionado com todos os meses, gastos e alterações, e importação que valida o arquivo inteiro antes de substituir qualquer coisa.
 - **Histórico de alterações.** Toda escrita registra os valores antigo e novo na mesma transação.
 - **Tema.** Claro, escuro ou seguindo o sistema, escolhido pelo menu.
@@ -97,16 +100,16 @@ Depois rode o app num celular ou emulador:
 flutter run
 ```
 
-Builds de debug instalam um app separado, `com.azevedo1z.gemify.debug` ("Gemify Dev"), então o desenvolvimento nunca toca nos dados do app de uso diário.
+Builds de debug instalam um app separado, `com.azevedo1z.gemify.debug` ("OffMoney Dev"), então o desenvolvimento nunca toca nos dados do app de uso diário.
 
 ## Build de release
 
 O release é assinado com um keystore guardado fora do repositório. Crie `android/key.properties` (ignorado pelo Git):
 
 ```properties
-storeFile=C:/caminho/para/gemify-release.jks
+storeFile=C:/caminho/para/offmoney-release.jks
 storePassword=...
-keyAlias=gemify
+keyAlias=offmoney
 keyPassword=...
 ```
 
@@ -176,11 +179,9 @@ O [CI](.github/workflows/ci.yml) roda o analisador, os testes e a checagem de co
 
 Desenvolvimento inicial (`0.x`), a caminho do Google Play. O esquema do banco e o formato do backup ainda podem mudar entre versões menores, sempre com migração ou um caminho de importação documentado.
 
-Planejado: converter o histórico antigo da Gem num arquivo de backup, e uma "caixinha" para guardar dinheiro e entradas extras.
-
 ## Privacidade
 
-O Gemify não tem conta, nem analytics, nem acesso à rede nos builds de release. Veja a [política de privacidade](PRIVACY_POLICY.md) (em inglês). Para relatar um problema de segurança, veja a [política de segurança](SECURITY.md) (em inglês).
+O OffMoney não tem conta, nem analytics, nem acesso à rede nos builds de release. Veja a [política de privacidade](PRIVACY_POLICY.md) (em inglês). Para relatar um problema de segurança, veja a [política de segurança](SECURITY.md) (em inglês).
 
 ## Licença
 

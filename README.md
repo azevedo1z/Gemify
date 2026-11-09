@@ -1,7 +1,8 @@
 <h1 align="center">
-  <img src="assets/icon/gemify-icon.png" width="96" alt="Gemify">
-  <br>
-  Gemify
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/offmoney-logo-dark.png">
+    <img src="assets/brand/offmoney-logo.png" width="320" alt="OffMoney">
+  </picture>
 </h1>
 
 <p align="center">
@@ -25,11 +26,11 @@
 ---
 
 > [!NOTE]
-> Gemify is a personal tracking tool, not financial advice. Check your amounts and decisions yourself; the software comes with no warranty (see the [license](LICENSE)).
+> OffMoney is a personal tracking tool, not financial advice. Check your amounts and decisions yourself; the software comes with no warranty (see the [license](LICENSE)).
 
 ## Table of contents
 
-- [Why Gemify](#why-gemify)
+- [Why OffMoney](#why-offmoney)
 - [Features](#features)
 - [How it works](#how-it-works)
 - [Getting started](#getting-started)
@@ -42,11 +43,15 @@
 - [Privacy](#privacy)
 - [License](#license)
 
-## Why Gemify
+## Why OffMoney
 
-Gemify replaces a Gemini "Gem" that kept a monthly budget through chat messages. The Gem worked, but every answer depended on a language model getting the arithmetic and the rules right, and the history lived inside a conversation.
+OffMoney is a monthly budget that stays off the network. There is no account, no bank connection, no cloud and no AI: you type what comes in and what goes out, and the app does the arithmetic the same way every time.
 
-Gemify keeps the same rules and makes them deterministic: amounts are integer cents, every rule has one implementation with tests, every change is logged, and the data stays on the phone. The app interface is in Brazilian Portuguese.
+- **Exact.** Amounts are integer cents, every rule has one implementation with tests, and every total is recomputed from the items.
+- **Auditable.** The balance always shows the full calculation, and every change is logged with its old and new values.
+- **Private.** Release builds have no internet permission; your data leaves the phone only when you export a backup.
+
+The app interface is in Brazilian Portuguese.
 
 ## Features
 
@@ -55,7 +60,7 @@ Gemify keeps the same rules and makes them deterministic: amounts are integer ce
 - **Month close with a preview.** Before closing, the app lists every effect: variable expenses cleared, installments advancing or finishing, fixed expenses carried over, the closing balance and the next month's income.
 - **Careful input.** A currency field filled from the right, with an empty state distinct from R$ 0,00; confirmation when an expense exceeds the remaining balance, when it looks like a duplicate, and before deleting.
 - **History.** Closed months are read-only, with their own audit line.
-- **Share.** A plain-text summary of any month in the Gem's layout, through the Android share sheet.
+- **Share.** A plain-text summary of any month, through the Android share sheet.
 - **Backup.** A versioned JSON export of every month, expense and change, and an import that validates the whole file before replacing anything.
 - **Change log.** Every write records the old and new values in the same transaction.
 - **Theme.** Light, dark or following the system, chosen from the menu.
@@ -97,16 +102,16 @@ Then run the app on a device or emulator:
 flutter run
 ```
 
-Debug builds install as a separate app, `com.azevedo1z.gemify.debug` ("Gemify Dev"), so development never touches the data of the installed release.
+Debug builds install as a separate app, `com.azevedo1z.gemify.debug` ("OffMoney Dev"), so development never touches the data of the installed release.
 
 ## Building a release
 
 Release builds are signed with a keystore kept outside the repository. Create `android/key.properties` (ignored by Git):
 
 ```properties
-storeFile=C:/path/to/gemify-release.jks
+storeFile=C:/path/to/offmoney-release.jks
 storePassword=...
-keyAlias=gemify
+keyAlias=offmoney
 keyPassword=...
 ```
 
@@ -176,11 +181,9 @@ flutter test integration_test
 
 Early development (`0.x`), heading to Google Play. The database schema and the backup format may still change between minor versions, always with a migration or a documented import path.
 
-Planned: converting the earlier history kept in the Gem into a backup file, and a "caixinha" for savings and extra income.
-
 ## Privacy
 
-Gemify has no account, no analytics and no network access in release builds. See the [privacy policy](PRIVACY_POLICY.md). To report a security issue, see the [security policy](SECURITY.md).
+OffMoney has no account, no analytics and no network access in release builds. See the [privacy policy](PRIVACY_POLICY.md). To report a security issue, see the [security policy](SECURITY.md).
 
 ## License
 
