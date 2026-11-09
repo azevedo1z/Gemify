@@ -128,7 +128,7 @@ No Google Play, o app usa o Play App Signing: o Google assina o que os usuários
 
 ## Releases
 
-As versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/) e ficam apenas nas [GitHub Releases](https://github.com/azevedo1z/Gemify/releases); não há arquivo de changelog. Os commits seguem os [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), e as notas da release são montadas a partir deles. Enviar uma tag `vX.Y.Z` dispara o [workflow de release](.github/workflows/release.yml), que confere se a tag bate com o `version` do `pubspec.yaml` e cria a GitHub Release com as notas agrupadas a partir dos commits desde a tag anterior (funcionalidades, correções, outras mudanças). Cada release traz só o código-fonte; os builds assinados são feitos localmente (veja [Build de release](#build-de-release)).
+As versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/) e ficam apenas nas [GitHub Releases](https://github.com/azevedo1z/offmoney/releases); não há arquivo de changelog. Os commits seguem os [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), e as notas da release são montadas a partir deles. Enviar uma tag `vX.Y.Z` dispara o [workflow de release](.github/workflows/release.yml), que confere se a tag bate com o `version` do `pubspec.yaml` e cria a GitHub Release com as notas agrupadas a partir dos commits desde a tag anterior (funcionalidades, correções, outras mudanças). Cada release traz só o código-fonte; os builds assinados são feitos localmente (veja [Build de release](#build-de-release)).
 
 Para publicar uma release:
 
