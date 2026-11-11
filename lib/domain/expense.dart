@@ -50,6 +50,8 @@ final class InstallmentExpense extends Expense {
 
   bool get isLast => current == total;
 
+  int get remaining => total - current;
+
   @override
   ExpenseCategory get category => ExpenseCategory.installment;
 
