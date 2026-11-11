@@ -19,6 +19,11 @@ void main() {
       expect(installment('Monitor', '60,00', 8, 9).isLast, isFalse);
     });
 
+    test('an installment knows how many are left after the current one', () {
+      expect(installment('Monitor', '60,00', 7, 9).remaining, 2);
+      expect(installment('Monitor', '60,00', 9, 9).remaining, 0);
+    });
+
     test('an installment advances one step keeping name and amount', () {
       expect(
         installment('Monitor', '60,00', 7, 9).advanced(),

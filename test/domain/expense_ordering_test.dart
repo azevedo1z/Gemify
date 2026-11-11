@@ -21,53 +21,49 @@ void main() {
       expect(idsOf(sorted), [3, 2, 1]);
     });
 
-    test('sorts Fixed and Installments alphabetically, ignoring case and '
-        'accents', () {
+    test('sorts Fixed alphabetically, ignoring case and accents', () {
       final sorted = ExpenseOrdering.sorted([
         entry(1, fixed('Energia', '180,00')),
         entry(2, fixed('aluguel', '1.100,00')),
         entry(3, fixed('Água', '85,00')),
-        entry(4, installment('Notebook', '150,00', 7, 10)),
-        entry(5, installment('Armário', '70,00', 10, 10)),
       ]);
 
-      expect(idsOf(sorted), [3, 2, 1, 5, 4]);
+      expect(idsOf(sorted), [3, 2, 1]);
     });
 
-    test('sorts Variable by date, newest first, then latest added', () {
+    test('sorts Installments by how many are left, ending soonest first', () {
       final sorted = ExpenseOrdering.sorted([
-        entry(
-          1,
-          variable('A', '1,00', on: CalendarDate(2026, 11, 5)),
-          createdAt: DateTime.utc(2026, 11, 7, 10),
-        ),
-        entry(
-          2,
-          variable('B', '1,00', on: CalendarDate(2026, 11, 7)),
-          createdAt: DateTime.utc(2026, 11, 7, 9),
-        ),
-        entry(
-          3,
-          variable('C', '1,00', on: CalendarDate(2026, 11, 5)),
-          createdAt: DateTime.utc(2026, 11, 7, 11),
-        ),
-        entry(4, variable('D', '1,00')),
+        entry(1, installment('Armário', '70,00', 2, 12)),
+        entry(2, installment('Notebook', '150,00', 10, 10)),
+        entry(3, installment('Monitor', '60,00', 7, 9)),
       ]);
 
-      expect(idsOf(sorted), [2, 3, 1, 4]);
+      expect(idsOf(sorted), [2, 3, 1]);
     });
 
-    test('breaks any remaining tie by id, so the order is stable', () {
+    test('sorts Variable by date, oldest first, with the undated last', () {
       final sorted = ExpenseOrdering.sorted([
+        entry(1, variable('Mercado', '1,00', on: CalendarDate(2026, 11, 7))),
+        entry(2, variable('Sem data', '1,00')),
+        entry(3, variable('Pão', '1,00', on: CalendarDate(2026, 11, 5))),
+      ]);
+
+      expect(idsOf(sorted), [3, 1, 2]);
+    });
+
+    test('breaks a tie by id, oldest entry first', () {
+      final sorted = ExpenseOrdering.sorted([
+        entry(8, variable('Sem data', '1,00')),
+        entry(7, variable('Sem data', '1,00')),
+        entry(6, variable('Pão', '7,00', on: defaultToday)),
+        entry(5, variable('Pão', '7,00', on: defaultToday)),
+        entry(4, installment('Monitor', '60,00', 7, 9)),
+        entry(3, installment('Armário', '70,00', 1, 3)),
         entry(2, fixed('Academia', '120,00')),
         entry(1, fixed('academia', '120,00')),
-        entry(3, variable('Pão', '7,00', on: defaultToday)),
-        entry(4, variable('Pão', '7,00', on: defaultToday)),
-        entry(5, variable('Sem data', '1,00')),
-        entry(6, variable('Sem data', '1,00')),
       ]);
 
-      expect(idsOf(sorted), [1, 2, 4, 3, 6, 5]);
+      expect(idsOf(sorted), [1, 2, 3, 4, 5, 6, 7, 8]);
     });
   });
 }
