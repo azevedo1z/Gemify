@@ -386,14 +386,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     decoration: InputDecoration(labelText: label, errorText: error),
   );
 
-  String _title(AppLocalizations l10n) {
-    final editing = widget.entry != null;
-    return switch (widget.category) {
-      ExpenseCategory.fixed => editing ? l10n.editFixed : l10n.newFixed,
-      ExpenseCategory.installment =>
-        editing ? l10n.editInstallment : l10n.newInstallment,
-      ExpenseCategory.variable =>
-        editing ? l10n.editVariable : l10n.newVariable,
-    };
-  }
+  String _title(AppLocalizations l10n) => widget.entry == null
+      ? newExpenseTitle(widget.category, l10n)
+      : editExpenseTitle(widget.category, l10n);
 }

@@ -231,6 +231,17 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.all(Radius.circular(Metrics.dialogRadius)),
         ),
       ),
+      bottomSheetTheme: BottomSheetThemeData(
+        modalBackgroundColor: cell,
+        modalElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(Metrics.dialogRadius),
+          ),
+        ),
+      ),
       datePickerTheme: DatePickerThemeData(
         backgroundColor: cell,
         elevation: 0,

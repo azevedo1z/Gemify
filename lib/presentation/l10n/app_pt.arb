@@ -39,6 +39,7 @@
   "aboutDisclaimer": "Ferramenta de controle pessoal. Não é consultoria financeira.",
   "addTo": "Adicionar em {section}",
   "@addTo": {"placeholders": {"section": {"type": "String"}}},
+  "newExpense": "Novo gasto",
   "newVariable": "Novo gasto variável",
   "newFixed": "Novo gasto fixo",
   "newInstallment": "Novo gasto parcelado",

@@ -53,6 +53,8 @@ void main() {
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Novo gasto variável'));
+    await tester.pumpAndSettle();
     await tester.enterText(find.widgetWithText(TextField, 'Nome'), 'Pão');
     await tester.enterText(find.widgetWithText(TextField, 'Valor'), '700');
     await tester.tap(find.text('Salvar'));

@@ -7,6 +7,12 @@ import '../support/app_harness.dart';
 import '../support/app_seeds.dart';
 import '../support/builders.dart';
 
+const newExpenseTitles = [
+  'Novo gasto fixo',
+  'Novo gasto parcelado',
+  'Novo gasto variável',
+];
+
 void main() {
   testApp('starts in Portuguese on the open month', (app) async {
     expect(find.text('nov/2026'), findsOneWidget);
@@ -84,8 +90,37 @@ void main() {
     expect(textOf(app.tester, const Key('balance')), r'R$ 4.800,00');
   });
 
-  testApp('adds a variable expense from the floating button', (app) async {
+  testApp('the floating button offers the categories in order', (app) async {
     await app.tap(find.byType(FloatingActionButton));
+
+    final positions = [
+      for (final title in newExpenseTitles)
+        app.tester.getTopLeft(find.text(title)).dy,
+    ];
+    expect(positions, [...positions]..sort());
+    expect(positions.toSet(), hasLength(newExpenseTitles.length));
+  });
+
+  for (final title in newExpenseTitles) {
+    testApp('the floating button opens "$title" when chosen', (app) async {
+      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(find.text(title));
+
+      expect(find.widgetWithText(AppBar, title), findsOneWidget);
+      expect(find.byType(BottomSheet), findsNothing);
+    });
+  }
+
+  testApp('dismissing the category chooser opens no form', (app) async {
+    await app.tap(find.byType(FloatingActionButton));
+    await app.pressBack();
+
+    expect(find.byType(BottomSheet), findsNothing);
+    expect(find.text('Salvar'), findsNothing);
+  });
+
+  testApp('adds a variable expense from its section', (app) async {
+    await app.tap(addVariableButton);
     expect(find.text('Novo gasto variável'), findsOneWidget);
     expect(find.text('07/11/2026'), findsOneWidget);
     await app.enter(field('Nome'), '  Pão  ');
@@ -99,7 +134,7 @@ void main() {
   testApp(
     'asks before saving more than the remaining balance',
     (app) async {
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'Geladeira');
       await app.enter(field('Valor'), '2000');
       await app.tap(find.text('Salvar'));
@@ -113,7 +148,7 @@ void main() {
       await app.tap(find.byType(BackButton));
       expect(find.text('Geladeira'), findsNothing);
 
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'Geladeira');
       await app.enter(field('Valor'), '2000');
       await app.tap(find.text('Salvar'));
@@ -303,7 +338,7 @@ void main() {
   testApp(
     'suggests names already used, applied only when tapped',
     (app) async {
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'pa');
       expect(find.widgetWithText(ListTile, 'Pão'), findsOneWidget);
       await app.tap(find.widgetWithText(ListTile, 'Pão'));

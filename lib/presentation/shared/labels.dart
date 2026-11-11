@@ -11,6 +11,20 @@ String categoryTitle(ExpenseCategory category, AppLocalizations l10n) =>
       ExpenseCategory.variable => l10n.variableTitle,
     };
 
+String newExpenseTitle(ExpenseCategory category, AppLocalizations l10n) =>
+    switch (category) {
+      ExpenseCategory.fixed => l10n.newFixed,
+      ExpenseCategory.installment => l10n.newInstallment,
+      ExpenseCategory.variable => l10n.newVariable,
+    };
+
+String editExpenseTitle(ExpenseCategory category, AppLocalizations l10n) =>
+    switch (category) {
+      ExpenseCategory.fixed => l10n.editFixed,
+      ExpenseCategory.installment => l10n.editInstallment,
+      ExpenseCategory.variable => l10n.editVariable,
+    };
+
 Money categoryTotal(MonthSummary summary, ExpenseCategory category) =>
     switch (category) {
       ExpenseCategory.fixed => summary.fixedTotal,
