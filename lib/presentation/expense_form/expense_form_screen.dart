@@ -119,22 +119,29 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     });
     final built = _buildExpense(current, total);
     if (built == null) return;
-    await _run(() async {
-      final check = await ref
-          .read(checkExpenseProvider)
-          .call(built, original: widget.entry);
-      if (!mounted) return false;
-      setState(() => _errors = check.errors);
-      if (!check.isValid) return false;
-      if (check.warnings.isNotEmpty && !await _confirm(check)) return false;
-      await ref
-          .read(saveExpenseProvider)
-          .call(check.expense, replacingId: widget.entry?.id);
-      return true;
-    });
+    final added = widget.entry == null;
+    await _run(
+      doneMessage: added ? AppLocalizations.of(context).expenseAdded : null,
+      () async {
+        final check = await ref
+            .read(checkExpenseProvider)
+            .call(built, original: widget.entry);
+        if (!mounted) return false;
+        setState(() => _errors = check.errors);
+        if (!check.isValid) return false;
+        if (check.warnings.isNotEmpty && !await _confirm(check)) return false;
+        await ref
+            .read(saveExpenseProvider)
+            .call(check.expense, replacingId: widget.entry?.id);
+        return true;
+      },
+    );
   }
 
-  Future<void> _run(Future<bool> Function() action) async {
+  Future<void> _run(
+    Future<bool> Function() action, {
+    String? doneMessage,
+  }) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
@@ -148,6 +155,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     }
     if (!done || !mounted) return;
     popIfCurrent(context);
+    if (doneMessage != null) {
+      messenger.showSnackBar(SnackBar(content: Text(doneMessage)));
+    }
   }
 
   Future<bool> _confirm(ExpenseCheck check) {
@@ -228,10 +238,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         appBar: AppBar(
           title: Text(_title(l10n)),
           actions: [
-            TextButton(
-              onPressed: _busy ? null : _save,
-              child: Text(l10n.save),
-            ),
+            TextButton(onPressed: _busy ? null : _save, child: Text(l10n.save)),
           ],
         ),
         body: ListView(

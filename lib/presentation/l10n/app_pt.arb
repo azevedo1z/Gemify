@@ -54,6 +54,7 @@
   "save": "Salvar",
   "cancel": "Cancelar",
   "delete": "Excluir",
+  "expenseAdded": "Gasto adicionado",
   "errorNameEmpty": "Informe o nome",
   "errorNameTooLong": "Máximo de {max} caracteres",
   "@errorNameTooLong": {"placeholders": {"max": {"type": "int"}}},
