@@ -10,6 +10,7 @@ import '../support/builders.dart';
 
 final Finder saveButton = textButton('Salvar');
 const duplicateWarning = 'Possível duplicata';
+const addedToast = 'Gasto adicionado';
 
 Future<void> newFixed(AppHarness app, String name, String digits) async {
   await app.tap(find.byTooltip('Adicionar em Gastos Fixos'));
@@ -19,6 +20,27 @@ Future<void> newFixed(AppHarness app, String name, String digits) async {
 }
 
 void main() {
+  testApp('adding an expense confirms it with a toast', (app) async {
+    await app.tap(find.byType(FloatingActionButton));
+    await app.enter(field('Nome'), 'Pão');
+    await app.enter(field('Valor'), '700');
+
+    await app.tap(saveButton);
+
+    expect(find.text('Pão'), findsOneWidget);
+    expect(find.widgetWithText(SnackBar, addedToast), findsOneWidget);
+  });
+
+  testApp('editing an expense shows no toast', (app) async {
+    await app.tap(find.text('Condomínio'));
+    await app.enter(field('Valor'), '80000');
+
+    await app.tap(saveButton);
+
+    expect(find.text('Gasto fixo'), findsNothing);
+    expect(find.byType(SnackBar), findsNothing);
+  }, seed: seedRent);
+
   testApp('a possible duplicate is saved only if confirmed', (app) async {
     await newFixed(app, 'condomínio', '1000');
     expect(find.text(duplicateWarning), findsOneWidget);
@@ -129,6 +151,7 @@ void main() {
         find.text('Erro. Nada foi alterado.'),
         findsOneWidget,
       );
+      expect(find.text(addedToast), findsNothing);
       expect(find.text('Novo gasto variável'), findsOneWidget);
       expect(isEnabled(app.tester, saveButton), isTrue);
     },
