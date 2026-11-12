@@ -10,7 +10,7 @@ Until 1.0, fixes are released only for the latest version and applied to the `ma
 
 Do **not** report vulnerabilities through public issues, pull requests or discussions.
 
-Report them privately through GitHub: open the repository's [Security tab](https://github.com/azevedo1z/offmoney/security) and select **Report a vulnerability**.
+Report them privately through GitHub: open the repository's [Security tab](https://github.com/azevedo1z/OffMoney/security) and select **Report a vulnerability**.
 
 Include as much of the following as possible:
 

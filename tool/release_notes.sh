@@ -2,7 +2,7 @@
 set -euo pipefail
 
 tag="$1"
-repository="${GITHUB_REPOSITORY:-azevedo1z/offmoney}"
+repository="${GITHUB_REPOSITORY:-azevedo1z/OffMoney}"
 previous="$(git describe --tags --abbrev=0 "$tag^" 2>/dev/null || true)"
 range="$tag"
 if [ -n "$previous" ]; then

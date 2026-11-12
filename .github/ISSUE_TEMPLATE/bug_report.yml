@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Never paste real financial data or a real backup file. For security issues, follow the [security policy](https://github.com/azevedo1z/offmoney/blob/master/SECURITY.md) instead.
+        Never paste real financial data or a real backup file. For security issues, follow the [security policy](https://github.com/azevedo1z/OffMoney/blob/master/SECURITY.md) instead.
   - type: textarea
     id: description
     attributes:

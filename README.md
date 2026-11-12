@@ -130,7 +130,7 @@ On Google Play, the app uses Play App Signing: Google signs what users download,
 
 ## Releases
 
-Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and live only on [GitHub Releases](https://github.com/azevedo1z/offmoney/releases); there is no changelog file. Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and the release notes are built from them. Pushing a `vX.Y.Z` tag runs the [release workflow](.github/workflows/release.yml), which checks that the tag matches the `version` in `pubspec.yaml` and creates the GitHub Release with notes grouped from the commits since the previous tag (features, fixes, other changes). Each release carries only the source code; signed builds are made locally (see [Building a release](#building-a-release)).
+Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and live only on [GitHub Releases](https://github.com/azevedo1z/OffMoney/releases); there is no changelog file. Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and the release notes are built from them. Pushing a `vX.Y.Z` tag runs the [release workflow](.github/workflows/release.yml), which checks that the tag matches the `version` in `pubspec.yaml` and creates the GitHub Release with notes grouped from the commits since the previous tag (features, fixes, other changes). Each release carries only the source code; signed builds are made locally (see [Building a release](#building-a-release)).
 
 To cut a release:
 
