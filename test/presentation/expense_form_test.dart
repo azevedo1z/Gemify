@@ -21,7 +21,7 @@ Future<void> newFixed(AppHarness app, String name, String digits) async {
 
 void main() {
   testApp('adding an expense confirms it with a toast', (app) async {
-    await app.tap(find.byType(FloatingActionButton));
+    await app.tap(addVariableButton);
     await app.enter(field('Nome'), 'Pão');
     await app.enter(field('Valor'), '700');
 
@@ -112,7 +112,7 @@ void main() {
   );
 
   testApp('rejects a date left in the future by the clock', (app) async {
-    await app.tap(find.byType(FloatingActionButton));
+    await app.tap(addVariableButton);
     await app.enter(field('Nome'), 'Pão');
     await app.enter(field('Valor'), '700');
     app.memory.clock.now = DateTime.utc(2026, 11, 6, 12);
@@ -125,7 +125,7 @@ void main() {
   });
 
   testApp('a double tap on save stores the item once', (app) async {
-    await app.tap(find.byType(FloatingActionButton));
+    await app.tap(addVariableButton);
     await app.enter(field('Nome'), 'Pão');
     await app.enter(field('Valor'), '700');
 
@@ -141,7 +141,7 @@ void main() {
   testApp(
     'a failed save says so and keeps the form open',
     (app) async {
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'Pão');
       await app.enter(field('Valor'), '700');
       await app.tap(saveButton);
@@ -161,12 +161,12 @@ void main() {
   testApp(
     'names added in this session are suggested next time',
     (app) async {
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'Farmácia');
       await app.enter(field('Valor'), '2000');
       await app.tap(saveButton);
 
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'farm');
 
       expect(find.widgetWithText(ListTile, 'Farmácia'), findsOneWidget);
@@ -177,7 +177,7 @@ void main() {
   );
 
   testApp('back is ignored while a save is in progress', (app) async {
-    await app.tap(find.byType(FloatingActionButton));
+    await app.tap(addVariableButton);
     await app.enter(field('Nome'), 'Pão');
     await app.enter(field('Valor'), '700');
     app.repository.holdWrites();
@@ -215,7 +215,7 @@ void main() {
   testApp(
     'the form still works when the used names fail to load',
     (app) async {
-      await app.tap(find.byType(FloatingActionButton));
+      await app.tap(addVariableButton);
       await app.enter(field('Nome'), 'Pão');
       await app.enter(field('Valor'), '700');
       await app.tap(saveButton);

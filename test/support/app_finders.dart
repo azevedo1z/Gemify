@@ -26,3 +26,7 @@ Finder row(String title, String value) => find.descendant(
   of: find.widgetWithText(ListTile, title),
   matching: find.text(value),
 );
+
+final Finder addVariableButton = find.byTooltip(
+  'Adicionar em Gastos Variáveis',
+);
