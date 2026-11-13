@@ -7,7 +7,7 @@ import 'package:offmoney/presentation/close_month/close_month_screen.dart';
 import 'package:offmoney/presentation/expense_form/expense_form_screen.dart';
 import 'package:offmoney/presentation/history/history_screen.dart';
 import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
-import 'package:offmoney/presentation/month/category_picker.dart';
+import 'package:offmoney/presentation/month/add_expense_button.dart';
 import 'package:offmoney/presentation/month/income_dialog.dart';
 import 'package:offmoney/presentation/providers.dart';
 import 'package:offmoney/presentation/shared/month_view.dart';
@@ -105,19 +105,11 @@ class _OpenMonthPage extends ConsumerWidget {
           MaterialPageRoute<void>(builder: (_) => const CloseMonthScreen()),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: l10n.newExpense,
-        onPressed: () => _addExpense(context),
-        child: const Icon(Icons.add_rounded),
+      floatingActionButton: AddExpenseButton(
+        onPick: (category) => openExpenseForm(context, category),
       ),
       bottomNavigationBar: AuditBar(summary: month.summary),
     );
-  }
-
-  Future<void> _addExpense(BuildContext context) async {
-    final category = await pickExpenseCategory(context);
-    if (category == null || !context.mounted) return;
-    await openExpenseForm(context, category);
   }
 
   Future<void> _pickTheme(BuildContext context, WidgetRef ref) async {
