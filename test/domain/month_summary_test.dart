@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:offmoney/domain/expense.dart';
 import 'package:offmoney/domain/month_summary.dart';
 
 import '../support/builders.dart';
@@ -21,6 +22,25 @@ void main() {
       expect(summary.variableTotal, brl('935,00'));
       expect(summary.totalExpenses, brl('4.229,50'));
       expect(summary.balance, brl('570,50'));
+    });
+
+    test('gives the total of each category', () {
+      final summary = MonthSummary.of(
+        income: null,
+        expenses: [
+          fixed('Condomínio', '750,00'),
+          installment('TV', '120,00', 8, 18),
+          variable('Pão', '7,00', on: defaultToday),
+        ],
+      );
+
+      expect(
+        [
+          for (final category in ExpenseCategory.values)
+            summary.totalOf(category),
+        ],
+        [brl('750,00'), brl('120,00'), brl('7,00')],
+      );
     });
 
     test('has no balance while the income is missing', () {

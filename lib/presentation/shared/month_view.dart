@@ -51,7 +51,7 @@ class MonthView extends StatelessWidget {
           GroupedSection(
             header: _SectionHeader(
               title: categoryTitle(category, l10n),
-              subtotal: categoryTotal(summary, category),
+              subtotal: summary.totalOf(category),
               onAdd: onAdd == null ? null : () => onAdd(category),
             ),
             children: _rowsOf(sorted, category),

@@ -1,7 +1,5 @@
 import 'package:offmoney/domain/expense.dart';
 import 'package:offmoney/domain/expense_rules.dart';
-import 'package:offmoney/domain/money.dart';
-import 'package:offmoney/domain/month_summary.dart';
 import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
 
 String categoryTitle(ExpenseCategory category, AppLocalizations l10n) =>
@@ -23,13 +21,6 @@ String editExpenseTitle(ExpenseCategory category, AppLocalizations l10n) =>
       ExpenseCategory.fixed => l10n.editFixed,
       ExpenseCategory.installment => l10n.editInstallment,
       ExpenseCategory.variable => l10n.editVariable,
-    };
-
-Money categoryTotal(MonthSummary summary, ExpenseCategory category) =>
-    switch (category) {
-      ExpenseCategory.fixed => summary.fixedTotal,
-      ExpenseCategory.installment => summary.installmentTotal,
-      ExpenseCategory.variable => summary.variableTotal,
     };
 
 String installmentCounter(InstallmentExpense installment) =>

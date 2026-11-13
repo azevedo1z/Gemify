@@ -43,6 +43,12 @@ final class MonthSummary {
 
   Money get totalExpenses => fixedTotal + installmentTotal + variableTotal;
 
+  Money totalOf(ExpenseCategory category) => switch (category) {
+    ExpenseCategory.fixed => fixedTotal,
+    ExpenseCategory.installment => installmentTotal,
+    ExpenseCategory.variable => variableTotal,
+  };
+
   Money? get balance {
     final income = this.income;
     return income == null ? null : income - totalExpenses;
