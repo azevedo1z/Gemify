@@ -10,6 +10,7 @@ import 'package:offmoney/presentation/l10n/generated/app_localizations.dart';
 import 'package:offmoney/presentation/month/add_expense_button.dart';
 import 'package:offmoney/presentation/month/income_dialog.dart';
 import 'package:offmoney/presentation/providers.dart';
+import 'package:offmoney/presentation/shared/failure.dart';
 import 'package:offmoney/presentation/shared/month_view.dart';
 import 'package:offmoney/presentation/shared/reference_picker.dart';
 import 'package:offmoney/presentation/shared/share_text.dart';
@@ -113,34 +114,43 @@ class _OpenMonthPage extends ConsumerWidget {
   }
 
   Future<void> _pickTheme(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final themeMode = ref.read(themeModeProvider.notifier);
     final picked = await pickThemeMode(
       context,
       initial: ref.read(themeModeProvider),
     );
     if (picked == null) return;
-    await ref.read(themeModeProvider.notifier).select(picked);
+    try {
+      await themeMode.select(picked);
+    } on Exception catch (error, stack) {
+      reportFailure(messenger, l10n.actionFailed, error, stack);
+    }
   }
 
   Future<void> _changeReference(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final changeReference = ref.read(changeOpenReferenceProvider);
-    final window = await changeReference.window();
-    if (!context.mounted) return;
-    final picked = await pickReference(
-      context,
-      title: l10n.changeReference,
-      confirmLabel: l10n.save,
-      initial: month.reference,
-      window: window,
-    );
-    if (picked == null || picked == month.reference) return;
     try {
+      final window = await changeReference.window();
+      if (!context.mounted) return;
+      final picked = await pickReference(
+        context,
+        title: l10n.changeReference,
+        confirmLabel: l10n.save,
+        initial: month.reference,
+        window: window,
+      );
+      if (picked == null || picked == month.reference) return;
       await changeReference(picked);
     } on InvalidReferenceException {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.referenceUnavailable)),
       );
+    } on Exception catch (error, stack) {
+      reportFailure(messenger, l10n.actionFailed, error, stack);
     }
   }
 }

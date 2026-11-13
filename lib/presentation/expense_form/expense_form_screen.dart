@@ -259,6 +259,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
                 ),
                 if (widget.category == ExpenseCategory.variable)
                   ListTile(
+                    enabled: !_busy,
                     title: Text(l10n.dateLabel),
                     trailing: Text(
                       dateError ?? formatDate(_spentOn),

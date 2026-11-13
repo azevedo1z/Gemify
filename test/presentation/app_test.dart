@@ -74,12 +74,7 @@ void main() {
         Theme.of(app.tester.element(balance)).colorScheme.error,
       );
     },
-    seed: (memory) async {
-      await memory.repository.setIncome(brl('100,00'));
-      await memory.repository.addExpense(
-        variable('Mercado', '150,00', on: defaultToday),
-      );
-    },
+    seed: seedOverdrawn,
   );
 
   testApp('sets the income from its tile', (app) async {
@@ -231,10 +226,7 @@ void main() {
       expect(find.text('Condomínio'), findsNothing);
       expect(textOf(app.tester, const Key('balance')), r'R$ 1.000,00');
     },
-    seed: (memory) async {
-      await memory.repository.setIncome(brl('1.000,00'));
-      await memory.repository.addExpense(fixed('Condomínio', '750,00'));
-    },
+    seed: seedRent,
   );
 
   testApp('the close is blocked while the income is missing', (app) async {
@@ -324,6 +316,18 @@ void main() {
     expect(month.reference, ReferenceMonth(2026, 12));
   });
 
+  testApp('a reference change that fails says so', (app) async {
+    await openReferencePicker(app);
+    await app.tap(referenceChip('dez/2026'));
+    await app.wait(failingOn('change_log')(app.memory));
+
+    await app.tap(find.text('Salvar'));
+
+    expect(app.tester.takeException(), isA<Exception>());
+    expect(find.text('Erro. Nada foi alterado.'), findsOneWidget);
+    expect(find.text('nov/2026'), findsOneWidget);
+  });
+
   testApp('tapping the month title does not open the reference picker', (
     app,
   ) async {
@@ -403,6 +407,18 @@ void main() {
     expect(_themeMode(app), ThemeMode.dark);
     expect(_brightness(app), Brightness.dark);
     expect(app.themeModeStore.stored, ThemeMode.dark);
+  });
+
+  testApp('a theme that cannot be saved is undone', (app) async {
+    app.themeModeStore.failsToWrite = true;
+    await app.tap(find.byIcon(Icons.more_horiz_rounded));
+    await app.tap(find.text('Tema'));
+
+    await app.tap(find.text('Escuro'));
+
+    expect(app.tester.takeException(), isA<Exception>());
+    expect(find.text('Erro. Nada foi alterado.'), findsOneWidget);
+    expect(_themeMode(app), ThemeMode.system);
   });
 
   testApp(
