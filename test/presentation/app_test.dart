@@ -107,7 +107,7 @@ void main() {
       await app.tap(find.text(title));
 
       expect(find.widgetWithText(AppBar, title), findsOneWidget);
-      expect(find.byType(BottomSheet), findsNothing);
+      expect(find.byIcon(Icons.close_rounded), findsNothing);
     });
   }
 
@@ -115,8 +115,46 @@ void main() {
     await app.tap(find.byType(FloatingActionButton));
     await app.pressBack();
 
-    expect(find.byType(BottomSheet), findsNothing);
+    expect(find.text(newExpenseTitles.first), findsNothing);
     expect(find.text('Salvar'), findsNothing);
+  });
+
+  testApp('the floating button closes its own category menu', (app) async {
+    final button = find.byType(FloatingActionButton);
+    final closeIcon = find.descendant(
+      of: button,
+      matching: find.byIcon(Icons.close_rounded),
+    );
+    final addIcon = find.descendant(
+      of: button,
+      matching: find.byIcon(Icons.add_rounded),
+    );
+
+    await app.tap(button);
+    expect(closeIcon, findsOneWidget);
+    expect(addIcon, findsNothing);
+
+    await app.tester.tapAt(app.tester.getCenter(button));
+    await app.settle();
+    expect(find.text(newExpenseTitles.first), findsNothing);
+    expect(closeIcon, findsNothing);
+    expect(addIcon, findsOneWidget);
+  });
+
+  testApp('the category menu opens beside the floating button', (app) async {
+    await app.usePhoneScreen();
+    await app.tap(find.byType(FloatingActionButton));
+
+    final button = app.tester.getRect(find.byType(FloatingActionButton));
+    final rows = [
+      for (final title in newExpenseTitles)
+        app.tester.getRect(find.text(title)),
+    ];
+    for (final row in rows) {
+      expect(row.left, greaterThan(0));
+      expect(row.right, lessThan(button.left));
+      expect(row.bottom, lessThanOrEqualTo(button.bottom));
+    }
   });
 
   testApp('adds a variable expense from its section', (app) async {
