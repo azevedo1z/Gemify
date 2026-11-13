@@ -10,6 +10,8 @@ import 'package:offmoney/domain/reference_month.dart';
 import 'package:offmoney/presentation/app.dart';
 import 'package:offmoney/presentation/providers.dart';
 
+import '../test/support/fake_theme_mode_store.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -22,7 +24,12 @@ void main() {
     await repository.ensureOpenMonth(ReferenceMonth(2026, 11));
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [monthRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          monthRepositoryProvider.overrideWithValue(repository),
+          themeModeStoreProvider.overrideWithValue(
+            FakeThemeModeStore(ThemeMode.system),
+          ),
+        ],
         child: const OffMoneyApp(),
       ),
     );

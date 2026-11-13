@@ -7,11 +7,6 @@ import 'package:offmoney/domain/reference_month.dart';
 import '../support/builders.dart';
 import '../support/sample_cycle.dart';
 
-ClosePlan planOf(CloseOutcome outcome) => switch (outcome) {
-  ClosePlanned(:final plan) => plan,
-  CloseRejected() => throw StateError('Expected a plan, got $outcome'),
-};
-
 CloseRejected rejectionOf(CloseOutcome outcome) => switch (outcome) {
   final CloseRejected rejection => rejection,
   ClosePlanned() => throw StateError('Expected a rejection, got $outcome'),
