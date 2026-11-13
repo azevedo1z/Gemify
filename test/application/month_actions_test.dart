@@ -5,7 +5,6 @@ import 'package:offmoney/application/rejections.dart';
 import 'package:offmoney/domain/calendar_date.dart';
 import 'package:offmoney/domain/expense_rules.dart';
 import 'package:offmoney/domain/money.dart';
-import 'package:offmoney/domain/month_closing.dart';
 import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/builders.dart';
@@ -166,12 +165,12 @@ void main() {
   });
 
   group('ChangeOpenReference', () {
-    Future<void> closeNovember() async {
+    Future<void> closeNovemberThroughUseCases() async {
       await SetIncome(memory.repository)(brl('1,00'));
       final outcome = PrepareClose(memory.clock.call)(
         await memory.repository.openMonth(),
       );
-      await ConfirmClose(memory.repository)((outcome as ClosePlanned).plan);
+      await ConfirmClose(memory.repository)(planOf(outcome));
     }
 
     ChangeOpenReference changeReference() =>
@@ -210,7 +209,7 @@ void main() {
     });
 
     test('rejects a month not after the latest closed one', () async {
-      await closeNovember();
+      await closeNovemberThroughUseCases();
 
       await expectLater(
         changeReference()(ReferenceMonth(2026, 11)),
@@ -233,7 +232,7 @@ void main() {
         await memory.repository.openMonth(),
       );
 
-      final plan = (outcome as ClosePlanned).plan;
+      final plan = planOf(outcome);
       expect(plan.newReference, ReferenceMonth(2026, 12));
       expect(plan.newIncome, brl('4.800,00'));
       expect(plan.incomeKept, isTrue);

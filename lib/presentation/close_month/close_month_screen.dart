@@ -50,13 +50,16 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
     newIncome: parseMoneyInput(_income.text),
   );
 
+  ReferenceMonth _referenceFor(Month month) =>
+      _newReference ?? ref.read(prepareCloseProvider).defaultReference(month);
+
   Future<void> _pickReference(Month month) async {
     final l10n = AppLocalizations.of(context);
     final picked = await pickReference(
       context,
       title: l10n.nextReference,
       confirmLabel: l10n.choose,
-      initial: _newReference ?? month.reference.next(),
+      initial: _referenceFor(month),
       window: ref.read(prepareCloseProvider).window(month),
     );
     if (picked != null && mounted) setState(() => _newReference = picked);
@@ -146,7 +149,7 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
                     [
                       for (final error in errors)
                         expenseErrorMessage(error, l10n),
-                    ].join(' · '),
+                    ].join(l10n.listSeparator),
                   ),
                 ),
           ],
@@ -165,7 +168,6 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
       CloseRejected(:final errors) => errors,
       ClosePlanned() => const <CloseError>{},
     };
-    final newReference = _newReference ?? month.reference.next();
     final keptIncome = month.income ?? Money.zero;
     return ListView(
       padding: const EdgeInsets.only(top: Metrics.inset),
@@ -188,7 +190,7 @@ class _CloseMonthScreenState extends ConsumerState<CloseMonthScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    formatReference(newReference, l10n),
+                    formatReference(_referenceFor(month), l10n),
                     style: TextStyle(color: scheme.primary),
                   ),
                   const Icon(Icons.chevron_right_rounded),

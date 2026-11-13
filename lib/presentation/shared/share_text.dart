@@ -43,7 +43,7 @@ String shareText(Month month, AppLocalizations l10n) {
       );
     }
     buffer.writeln(
-      _totalLine(category, formatMoney(categoryTotal(summary, category)), l10n),
+      _totalLine(category, formatMoney(summary.totalOf(category)), l10n),
     );
   }
   buffer

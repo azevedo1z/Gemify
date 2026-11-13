@@ -29,10 +29,7 @@ final class CycleScenario {
   Future<Month> openMonth() => memory.repository.openMonth();
 
   Future<ClosePlan> plan({Money? newIncome}) async =>
-      switch (prepareClose(await openMonth(), newIncome: newIncome)) {
-        ClosePlanned(:final plan) => plan,
-        final CloseRejected rejection => throw StateError('$rejection'),
-      };
+      planOf(prepareClose(await openMonth(), newIncome: newIncome));
 
   Future<void> closeTheFirstMonth() async {
     await setIncome(brl('5.000,00'));

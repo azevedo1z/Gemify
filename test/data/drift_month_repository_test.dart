@@ -13,20 +13,20 @@ import 'package:sqlite3/sqlite3.dart';
 
 import '../support/builders.dart';
 import '../support/memory_repository.dart';
+import '../support/snapshot_description.dart';
 
 ClosePlan planFor(
   Month month, {
   ReferenceMonth? to,
   Money? income,
-}) => switch (MonthClosing.plan(
-  month: month,
-  newReference: to ?? month.reference.next(),
-  newIncome: income,
-  today: defaultToday,
-)) {
-  ClosePlanned(:final plan) => plan,
-  final CloseRejected rejection => throw StateError('$rejection'),
-};
+}) => planOf(
+  MonthClosing.plan(
+    month: month,
+    newReference: to ?? month.reference.next(),
+    newIncome: income,
+    today: defaultToday,
+  ),
+);
 
 void main() {
   late MemoryRepository memory;
@@ -35,7 +35,7 @@ void main() {
   tearDown(() => memory.close());
 
   group('first run', () {
-    test('creates one open month, and running again changes nothing', () async {
+    test('a second start keeps the month opened by the first', () async {
       await memory.repository.ensureOpenMonth(ReferenceMonth(2030, 1));
 
       final snapshot = await memory.repository.snapshot();
@@ -98,13 +98,31 @@ void main() {
           ChangeAction.expenseDeleted,
         ],
       );
-      expect(jsonDecode(log[0].before!), {'incomeCents': null});
-      expect(jsonDecode(log[0].after!), {'incomeCents': 480000});
-      expect(jsonDecode(log[2].before!), containsPair('amountCents', 75000));
-      expect(jsonDecode(log[2].after!), containsPair('amountCents', 80000));
-      expect(jsonDecode(log[3].after!), {'reference': '2026-12'});
-      expect(log[4].entityId, id);
-      expect(log[4].after, isNull);
+      final [incomeSet, created, updated, referenceSet, deleted] = log;
+      Object? fixedJson(int cents) => {
+        'category': 'fixed',
+        'name': 'Condomínio',
+        'amountCents': cents,
+      };
+      expect(jsonDecode(incomeSet.before!), {'incomeCents': null});
+      expect(jsonDecode(incomeSet.after!), {'incomeCents': 480000});
+      expect(created.before, isNull);
+      expect(jsonDecode(created.after!), fixedJson(75000));
+      expect(jsonDecode(updated.before!), fixedJson(75000));
+      expect(jsonDecode(updated.after!), fixedJson(80000));
+      expect(jsonDecode(referenceSet.before!), {'reference': '2026-11'});
+      expect(jsonDecode(referenceSet.after!), {'reference': '2026-12'});
+      expect(jsonDecode(deleted.before!), fixedJson(80000));
+      expect(deleted.after, isNull);
+      expect(
+        [for (final entry in log) entry.entityId],
+        [month.id, id, id, month.id, id],
+      );
+      expect([for (final entry in log) entry.monthId], everyElement(month.id));
+      expect(
+        [for (final entry in log) entry.occurredAt],
+        everyElement(memory.clock.now),
+      );
     });
 
     test('stores every kind of item as it was given', () async {
@@ -186,7 +204,19 @@ void main() {
         expect(closed.entries, closing.entries);
         final log = (await memory.repository.snapshot()).changeLog.last;
         expect(log.action, ChangeAction.monthClosed);
-        expect(jsonDecode(log.after!), containsPair('installmentsFinished', 1));
+        expect(log.monthId, closing.id);
+        expect(log.entityId, open.id);
+        expect(log.before, isNull);
+        expect(jsonDecode(log.after!), {
+          'closedReference': '2026-11',
+          'newReference': '2026-12',
+          'newIncomeCents': 480000,
+          'incomeKept': false,
+          'fixedKept': 1,
+          'installmentsAdvanced': 1,
+          'installmentsFinished': 1,
+          'variablesCleared': 1,
+        });
       },
     );
 
@@ -324,22 +354,14 @@ void main() {
         await copy.repository.replaceAll(original);
 
         final restored = await copy.repository.snapshot();
+        final imported = restored.changeLog.last;
+        expect(describeMonths(restored), describeMonths(original));
         expect(
-          [for (final month in restored.months) month.entries],
-          [for (final month in original.months) month.entries],
+          describeChanges(restored.changeLog),
+          describeChanges([...original.changeLog, imported]),
         );
-        expect(
-          [for (final month in restored.months) month.reference],
-          [for (final month in original.months) month.reference],
-        );
-        expect(
-          [for (final entry in restored.changeLog) entry.id],
-          [
-            for (final entry in original.changeLog) entry.id,
-            original.changeLog.length + 1,
-          ],
-        );
-        expect(restored.changeLog.last.action, ChangeAction.backupImported);
+        expect(imported.id, original.changeLog.length + 1);
+        expect(imported.action, ChangeAction.backupImported);
       },
     );
 

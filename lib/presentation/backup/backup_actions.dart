@@ -27,6 +27,7 @@ Future<void> exportBackup(BuildContext context, WidgetRef ref) async {
 Future<void> importBackup(BuildContext context, WidgetRef ref) async {
   final l10n = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
+  final import = ref.read(importBackupProvider);
   final String? text;
   try {
     text = await ref.read(backupFilesProvider).open();
@@ -35,7 +36,6 @@ Future<void> importBackup(BuildContext context, WidgetRef ref) async {
     return;
   }
   if (text == null) return;
-  final import = ref.read(importBackupProvider);
   switch (import.read(text)) {
     case BackupRejected(:final problem):
       messenger.showSnackBar(

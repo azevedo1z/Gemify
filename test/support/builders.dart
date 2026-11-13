@@ -3,6 +3,7 @@ import 'package:offmoney/domain/expense.dart';
 import 'package:offmoney/domain/expense_entry.dart';
 import 'package:offmoney/domain/money.dart';
 import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/domain/month_closing.dart';
 import 'package:offmoney/domain/reference_month.dart';
 
 final defaultToday = CalendarDate(2026, 11, 7);
@@ -78,3 +79,8 @@ Month closedMonth({
   closedAt: defaultCreatedAt,
   entries: items,
 );
+
+ClosePlan planOf(CloseOutcome outcome) => switch (outcome) {
+  ClosePlanned(:final plan) => plan,
+  CloseRejected() => throw StateError('Expected a plan, got $outcome'),
+};

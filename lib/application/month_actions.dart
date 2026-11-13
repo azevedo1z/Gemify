@@ -137,13 +137,15 @@ final class PrepareClose {
   ReferenceWindow window(Month month) =>
       ReferenceWindow.after(month.reference, today: todayFrom(_clock));
 
+  ReferenceMonth defaultReference(Month month) => month.reference.next();
+
   CloseOutcome call(
     Month month, {
     ReferenceMonth? newReference,
     Money? newIncome,
   }) => MonthClosing.plan(
     month: month,
-    newReference: newReference ?? month.reference.next(),
+    newReference: newReference ?? defaultReference(month),
     newIncome: newIncome,
     today: todayFrom(_clock),
   );

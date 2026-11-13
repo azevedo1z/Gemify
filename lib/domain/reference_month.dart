@@ -23,8 +23,6 @@ final class ReferenceMonth implements Comparable<ReferenceMonth> {
   }
 
   static const monthsInYear = 12;
-  static const firstYear = 1;
-  static const lastYear = 9999;
   static final _isoPattern = RegExp(r'^(\d{4})-(\d{2})$');
 
   final int year;
@@ -47,8 +45,8 @@ final class ReferenceMonth implements Comparable<ReferenceMonth> {
   static bool _isValid(int year, int month) =>
       month >= 1 &&
       month <= monthsInYear &&
-      year >= firstYear &&
-      year <= lastYear;
+      year >= CalendarDate.firstYear &&
+      year <= CalendarDate.lastYear;
 
   @override
   int compareTo(ReferenceMonth other) => _ordinal.compareTo(other._ordinal);

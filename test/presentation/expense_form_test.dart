@@ -125,12 +125,7 @@ void main() {
 
       expect(find.text('Supermercado'), findsNothing);
     },
-    seed: (memory) async {
-      await memory.repository.setIncome(brl('100,00'));
-      await memory.repository.addExpense(
-        variable('Mercado', '150,00', on: defaultToday),
-      );
-    },
+    seed: seedOverdrawn,
   );
 
   testApp('rejects a date left in the future by the clock', (app) async {
@@ -197,6 +192,23 @@ void main() {
       variable('Pão', '7,00', on: defaultToday),
     ),
   );
+
+  testApp('the date cannot be changed while a save is in progress', (
+    app,
+  ) async {
+    final dateRow = find.widgetWithText(ListTile, 'Data');
+    await app.tap(addVariableButton);
+    await app.enter(field('Nome'), 'Pão');
+    await app.enter(field('Valor'), '700');
+    app.repository.holdWrites();
+
+    await app.tap(saveButton);
+
+    expect(app.tester.widget<ListTile>(dateRow).enabled, isFalse);
+    app.repository.releaseWrites();
+    await app.settle();
+    expect(find.text('nov/2026'), findsOneWidget);
+  });
 
   testApp('back is ignored while a save is in progress', (app) async {
     await app.tap(addVariableButton);

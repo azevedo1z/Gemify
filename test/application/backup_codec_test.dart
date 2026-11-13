@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:offmoney/application/backup/backup_actions.dart';
 import 'package:offmoney/application/backup/backup_codec.dart';
-import 'package:offmoney/application/backup/backup_snapshot.dart';
 import 'package:offmoney/application/change_log_entry.dart';
-import 'package:offmoney/domain/month.dart';
+import 'package:offmoney/application/month_actions.dart';
 import 'package:offmoney/domain/reference_month.dart';
 
 import '../support/backup_fixture.dart';
 import '../support/builders.dart';
 import '../support/memory_repository.dart';
+import '../support/snapshot_description.dart';
 
 BackupReading read(Map<String, Object?> backup) =>
     BackupCodec.decode(jsonEncode(backup), today: defaultToday);
@@ -173,6 +173,44 @@ void main() {
             BackupProblem.invalidExpenses,
             (backup) => _expenses(backup, 1)[1]['name'] = 'Pão\nSaldo 9.999,00',
           ),
+          'months that are not a list': (
+            BackupProblem.invalidStructure,
+            (backup) => backup['months'] = 'none',
+          ),
+          'a month that is not an object': (
+            BackupProblem.invalidStructure,
+            (backup) => backup['months'] = <Object?>['none'],
+          ),
+          'a change log that is missing': (
+            BackupProblem.invalidStructure,
+            (backup) => backup.remove('changeLog'),
+          ),
+          'an unknown category': (
+            BackupProblem.invalidStructure,
+            (backup) => _expenses(backup, 1)[0]['category'] = 'other',
+          ),
+          'an installment missing a counter': (
+            BackupProblem.invalidStructure,
+            (backup) => _expenses(backup, 1)[0].remove('totalInstallments'),
+          ),
+          'a date on an installment': (
+            BackupProblem.invalidStructure,
+            (backup) => _expenses(backup, 1)[0]['spentOn'] = '2026-11-07',
+          ),
+          'an unknown change action': (
+            BackupProblem.invalidStructure,
+            (backup) => _changes(backup).single['action'] = 'renamed',
+          ),
+          'a repeated change id': (
+            BackupProblem.invalidStructure,
+            (backup) => (backup['changeLog']! as List<Object?>).add(
+              {..._changes(backup).single},
+            ),
+          ),
+          'a Variable item dated after today': (
+            BackupProblem.invalidExpenses,
+            (backup) => _expenses(backup, 1)[1]['spentOn'] = '2026-11-08',
+          ),
           'a change of a month not in the file': (
             BackupProblem.invalidChangeLog,
             (backup) => _changes(backup).single['monthId'] = 99,
@@ -196,13 +234,18 @@ void main() {
       });
     }
 
-    test('text that is not JSON', () {
-      expect(
-        (BackupCodec.decode('not json', today: defaultToday) as BackupRejected)
-            .problem,
-        BackupProblem.invalidStructure,
-      );
-    });
+    for (final MapEntry(key: description, value: text) in {
+      'text that is not JSON': 'not json',
+      'JSON that is not an object': '[]',
+    }.entries) {
+      test(description, () {
+        expect(
+          (BackupCodec.decode(text, today: defaultToday) as BackupRejected)
+              .problem,
+          BackupProblem.invalidStructure,
+        );
+      });
+    }
   });
 
   test('export then import gives back the same data', () async {
@@ -210,6 +253,12 @@ void main() {
     addTearDown(memory.close);
     await memory.repository.setIncome(brl('4.800,00'));
     await memory.repository.addExpense(installment('TV', '120,00', 8, 18));
+    memory.clock.advance();
+    await memory.repository.applyClose(
+      planOf(
+        PrepareClose(memory.clock.call)(await memory.repository.openMonth()),
+      ),
+    );
     await memory.repository.addExpense(
       variable('Pão', '7,00', on: defaultToday),
     );
@@ -228,7 +277,19 @@ void main() {
 
     final original = await memory.repository.snapshot();
     final restored = (reading as BackupAccepted).snapshot;
-    expect(_describe(restored), _describe(original));
+    expect(describeMonths(restored), describeMonths(original));
+    expect(
+      describeChanges(restored.changeLog),
+      describeChanges(original.changeLog),
+    );
+  });
+
+  test('the file is named after the day of the export', () async {
+    final memory = await MemoryRepository.open();
+    addTearDown(memory.close);
+
+    final export = ExportBackup(memory.repository, memory.clock.call);
+
     expect(export.fileName(), 'offmoney-backup-2026-11-07.json');
   });
 
@@ -249,19 +310,4 @@ List<Map<String, Object?>> _expenses(Map<String, Object?> backup, int index) =>
 List<Map<String, Object?>> _changes(Map<String, Object?> backup) => [
   for (final item in backup['changeLog']! as List<Object?>)
     item! as Map<String, Object?>,
-];
-
-List<Object?> _describe(BackupSnapshot snapshot) => [
-  for (final Month month in snapshot.months)
-    [
-      month.id,
-      month.reference,
-      month.status,
-      month.income,
-      month.openedAt,
-      month.closedAt,
-      month.entries,
-    ],
-  for (final entry in snapshot.changeLog)
-    [entry.id, entry.occurredAt, entry.monthId, entry.action, entry.after],
 ];

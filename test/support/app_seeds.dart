@@ -1,5 +1,4 @@
 import 'package:offmoney/application/month_actions.dart';
-import 'package:offmoney/domain/month_closing.dart';
 
 import 'app_harness.dart';
 import 'builders.dart';
@@ -21,12 +20,19 @@ Future<void> seedRent(MemoryRepository memory) async {
   await memory.repository.addExpense(fixed('Condomínio', '750,00'));
 }
 
+Future<void> seedOverdrawn(MemoryRepository memory) async {
+  await memory.repository.setIncome(brl('100,00'));
+  await memory.repository.addExpense(
+    variable('Mercado', '150,00', on: defaultToday),
+  );
+}
+
 Future<void> closeNovember(MemoryRepository memory) async {
   await memory.repository.setIncome(brl('1.000,00'));
   final outcome = PrepareClose(memory.clock.call)(
     await memory.repository.openMonth(),
   );
-  await memory.repository.applyClose((outcome as ClosePlanned).plan);
+  await memory.repository.applyClose(planOf(outcome));
 }
 
 Seed failingOn(String table, [Seed? before]) => (memory) async {

@@ -107,7 +107,13 @@ final class ThemeModeNotifier extends Notifier<ThemeMode> {
   ThemeMode build() => ref.watch(themeModeStoreProvider).read();
 
   Future<void> select(ThemeMode mode) async {
+    final previous = state;
     state = mode;
-    await ref.read(themeModeStoreProvider).write(mode);
+    try {
+      await ref.read(themeModeStoreProvider).write(mode);
+    } on Object {
+      state = previous;
+      rethrow;
+    }
   }
 }

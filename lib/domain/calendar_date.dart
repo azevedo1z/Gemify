@@ -22,8 +22,8 @@ final class CalendarDate implements Comparable<CalendarDate> {
     throw FormatException('Expected an existing date as yyyy-MM-dd', iso);
   }
 
-  static const _firstYear = 1;
-  static const _lastYear = 9999;
+  static const firstYear = 1;
+  static const lastYear = 9999;
   static final _isoPattern = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$');
 
   final int year;
@@ -38,7 +38,7 @@ final class CalendarDate implements Comparable<CalendarDate> {
   bool isAfter(CalendarDate other) => compareTo(other) > 0;
 
   static bool _exists(int year, int month, int day) {
-    if (year < _firstYear || year > _lastYear) return false;
+    if (year < firstYear || year > lastYear) return false;
     final probe = DateTime.utc(year, month, day);
     return probe.year == year && probe.month == month && probe.day == day;
   }
