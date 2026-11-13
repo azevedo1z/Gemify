@@ -56,6 +56,8 @@
   "cancel": "Cancelar",
   "delete": "Excluir",
   "expenseAdded": "Gasto adicionado",
+  "expenseUpdated": "Gasto atualizado",
+  "expenseDeleted": "Gasto excluído",
   "errorNameEmpty": "Informe o nome",
   "errorNameTooLong": "Máximo de {max} caracteres",
   "@errorNameTooLong": {"placeholders": {"max": {"type": "int"}}},
