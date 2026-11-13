@@ -11,6 +11,8 @@ import '../support/builders.dart';
 final Finder saveButton = textButton('Salvar');
 const duplicateWarning = 'Possível duplicata';
 const addedToast = 'Gasto adicionado';
+const updatedToast = 'Gasto atualizado';
+const deletedToast = 'Gasto excluído';
 
 Future<void> newFixed(AppHarness app, String name, String digits) async {
   await app.tap(find.byTooltip('Adicionar em Gastos Fixos'));
@@ -31,13 +33,33 @@ void main() {
     expect(find.widgetWithText(SnackBar, addedToast), findsOneWidget);
   });
 
-  testApp('editing an expense shows no toast', (app) async {
+  testApp('editing an expense confirms it with a toast', (app) async {
     await app.tap(find.text('Condomínio'));
     await app.enter(field('Valor'), '80000');
 
     await app.tap(saveButton);
 
     expect(find.text('Gasto fixo'), findsNothing);
+    expect(find.widgetWithText(SnackBar, updatedToast), findsOneWidget);
+  }, seed: seedRent);
+
+  testApp('deleting an expense confirms it with a toast', (app) async {
+    await app.tap(find.text('Condomínio'));
+    await app.tap(find.text('Excluir'));
+
+    await app.tap(find.text('Excluir').last);
+
+    expect(find.text('Condomínio'), findsNothing);
+    expect(find.widgetWithText(SnackBar, deletedToast), findsOneWidget);
+  }, seed: seedRent);
+
+  testApp('a cancelled delete shows no toast', (app) async {
+    await app.tap(find.text('Condomínio'));
+    await app.tap(find.text('Excluir'));
+
+    await app.tap(find.text('Cancelar'));
+
+    expect(find.text('Gasto fixo'), findsOneWidget);
     expect(find.byType(SnackBar), findsNothing);
   }, seed: seedRent);
 
@@ -206,6 +228,7 @@ void main() {
 
       expect(app.tester.takeException(), isA<Exception>());
       expect(find.text('Erro. Nada foi alterado.'), findsOneWidget);
+      expect(find.text(updatedToast), findsNothing);
       expect(find.text('Gasto fixo'), findsOneWidget);
       expect(isEnabled(app.tester, saveButton), isTrue);
     },

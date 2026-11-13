@@ -119,9 +119,11 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     });
     final built = _buildExpense(current, total);
     if (built == null) return;
-    final added = widget.entry == null;
+    final l10n = AppLocalizations.of(context);
     await _run(
-      doneMessage: added ? AppLocalizations.of(context).expenseAdded : null,
+      doneMessage: widget.entry == null
+          ? l10n.expenseAdded
+          : l10n.expenseUpdated,
       () async {
         final check = await ref
             .read(checkExpenseProvider)
@@ -140,7 +142,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
   Future<void> _run(
     Future<bool> Function() action, {
-    String? doneMessage,
+    required String doneMessage,
   }) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
@@ -155,9 +157,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     }
     if (!done || !mounted) return;
     popIfCurrent(context);
-    if (doneMessage != null) {
-      messenger.showSnackBar(SnackBar(content: Text(doneMessage)));
-    }
+    messenger.showSnackBar(SnackBar(content: Text(doneMessage)));
   }
 
   Future<bool> _confirm(ExpenseCheck check) {
@@ -199,7 +199,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       ),
     );
     if (!confirmed || !mounted) return;
-    await _run(() async {
+    await _run(doneMessage: l10n.expenseDeleted, () async {
       await ref.read(deleteExpenseProvider).call(entry.id);
       return true;
     });
